@@ -109,7 +109,7 @@ def ask_question():
         # Llama al LLM (Gemini 2.0 Flash)
         # IMPORTANTE: Necesitas tu propia API Key de Google AI Studio aquí.
         # Obtén una en https://aistudio.google.com/app/apikey
-        api_key = "AIzaSyA81ZYNZOFiejK5zD4Jn-ezqCaXj5S5qOk" # <--- ¡Inserta tu API Key de Gemini aquí!
+        api_key = os.getenv("GEMINI_API_KEY") # Lee la clave de una variable de entorno # <--- ¡Inserta tu API Key de Gemini aquí!
         api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
         chat_history = []
@@ -139,4 +139,7 @@ def ask_question():
         return jsonify({"error": f"Error interno al procesar la pregunta: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # El servicio de hosting proporcionará el puerto a través de una variable de entorno 'PORT'
+    port = int(os.environ.get("PORT", 5000))
+    # host='0.0.0.0' para que el servidor escuche conexiones desde cualquier IP externa
+    app.run(debug=True, host='0.0.0.0', port=port)

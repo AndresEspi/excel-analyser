@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 
+// Define la URL base de tu backend desplegado en Render
+// ¡Esta es la URL que proporcionaste!
+const API_BASE_URL = 'https://excel-analyser-backend.onrender.com';
+
 // Componente principal de la aplicación
 const App = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -49,7 +53,8 @@ const App = () => {
       const formData = new FormData();
       formData.append('excelFile', selectedFile); // 'excelFile' debe coincidir con el nombre esperado en el backend (request.files['excelFile'])
 
-      const response = await fetch('http://127.0.0.1:5000/upload', { // URL de tu backend
+      // === CAMBIO AQUÍ: Usar la URL de Render para el backend ===
+      const response = await fetch(`${API_BASE_URL}/upload`, { 
         method: 'POST',
         body: formData,
       });
@@ -88,7 +93,8 @@ const App = () => {
     setAnswer('Obteniendo respuesta...');
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/ask', {
+      // === CAMBIO AQUÍ: Usar la URL de Render para el backend ===
+      const response = await fetch(`${API_BASE_URL}/ask`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,13 +139,13 @@ const App = () => {
             accept=".xlsx, .xls, .csv" // Actualizado para aceptar CSV
             onChange={handleFileChange}
             className="block w-full text-sm text-gray-900
-                       file:mr-4 file:py-2 file:px-4
-                       file:rounded-full file:border-0
-                       file:text-sm file:font-semibold
-                       file:bg-blue-50 file:text-blue-700
-                       hover:file:bg-blue-100
-                       cursor-pointer
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                         file:mr-4 file:py-2 file:px-4
+                         file:rounded-full file:border-0
+                         file:text-sm file:font-semibold
+                         file:bg-blue-50 file:text-blue-700
+                         hover:file:bg-blue-100
+                         cursor-pointer
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           {message && (
             <p className={`text-sm mt-4 text-center ${fileUploaded ? 'text-green-600' : 'text-red-600'}`}>
@@ -150,11 +156,11 @@ const App = () => {
             onClick={handleFileUpload}
             disabled={!selectedFile || loadingAnswer}
             className={`w-full mt-4 py-3 px-4 rounded-lg text-white font-semibold
-                        transition duration-300 ease-in-out
-                        ${(!selectedFile || loadingAnswer)
-                          ? 'bg-gray-400 cursor-not-allowed'
-                          : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                        }`}
+                         transition duration-300 ease-in-out
+                         ${(!selectedFile || loadingAnswer)
+                           ? 'bg-gray-400 cursor-not-allowed'
+                           : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                         }`}
           >
             {loadingAnswer && !fileUploaded ? 'Subiendo...' : 'Subir y Analizar Archivo'}
           </button>
@@ -184,11 +190,11 @@ const App = () => {
               onClick={handleAskQuestion}
               disabled={loadingAnswer || !question.trim()}
               className={`w-full py-3 px-4 rounded-lg text-white font-semibold
-                          transition duration-300 ease-in-out
-                          ${(loadingAnswer || !question.trim())
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-                          }`}
+                           transition duration-300 ease-in-out
+                           ${(loadingAnswer || !question.trim())
+                             ? 'bg-gray-400 cursor-not-allowed'
+                             : 'bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                           }`}
             >
               {loadingAnswer ? 'Procesando...' : 'Obtener Respuesta'}
             </button>

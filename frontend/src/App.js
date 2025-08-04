@@ -7,142 +7,88 @@ const API_BASE_URL = 'https://excel-analyser-backend.onrender.com';
 // Datos de productos consolidados y categorizados.
 const CATEGORIZED_PRODUCT_DATA = {
     'FRASCO SHAMPOO COLOR PROTECT TONO SOBRE TONO': [
-        { cod: 'NC16', description: 'SH BEIGE PERLA', unitPrice: 18750 },
-        { cod: 'NC18', description: 'SH CHOCOLATE LIGTH', unitPrice: 18750 },
-        { cod: 'NC12', description: 'SH GRIS SILVER', unitPrice: 18750 },
-        { cod: 'NC14', description: 'SH NEGRO NIGHT', unitPrice: 18750 },
-        { cod: 'NC9', description: 'SH ROJO INTENSE', unitPrice: 18750 },
-        { cod: 'NC10', description: 'SH VIOLETA ULTRA', unitPrice: 18750 },
-        { cod: 'NC05', description: 'SH CENIZO SPECIAL', unitPrice: 18750 },
-        { cod: 'NC64', description: 'SH COBRE DEEP', unitPrice: 18750 },
-        { cod: 'NC235', description: 'SH MECHAS BLANCAS', unitPrice: 18750 }
+        { cod: 'NC16', description: 'SH.COLOR PROTECT BEIGE PERLA X 285', unitPrice: 11300 },
+        { cod: 'NC18', description: 'SH.COLOR PROTECT CHOCOLATE LIGTH X 285', unitPrice: 11300 },
+        { cod: 'NC12', description: 'SH.COLOR PROTECT GRIS SILVER X 285', unitPrice: 11300 },
+        { cod: 'NC14', description: 'SH.COLOR PROTECT NEGRO NIGHT X 285', unitPrice: 11300 },
+        { cod: 'NC9', description: 'SH.COLOR PROTECT ROJO INTENSE X 285', unitPrice: 11300 },
+        { cod: 'NC10', description: 'SH.COLOR PROTECT VIOLETA ULTRA X 285', unitPrice: 11300 },
     ],
     'FRASCO MASCARILLA COLOR PROTECT TONO SOBRE TONO': [
-        { cod: 'NC15', description: 'MSC BEIGE PERLA', unitPrice: 18750 },
-        { cod: 'NC17', description: 'MSC CHOCOLATE LIGTH', unitPrice: 18750 },
-        { cod: 'NC11', description: 'MSC GRIS SILVER', unitPrice: 18750 },
-        { cod: 'NC13', description: 'MSC NEGRO NIGHT', unitPrice: 18750 },
-        { cod: 'NC08', description: 'MSC ROJO INTENSE', unitPrice: 18750 },
-        { cod: 'NC07', description: 'MSC VIOLETA ULTRA', unitPrice: 18750 },
-        { cod: 'NC06', description: 'MSC CENIZO SPECIAL', unitPrice: 18750 },
-        { cod: 'NC65', description: 'MSC COBRE DEEP', unitPrice: 18750 },
-        { cod: 'NC67', description: 'MSC AZUL PLATINO', unitPrice: 18750 },
-        { cod: 'NC202', description: 'MSC MECHAS BLANCAS', unitPrice: 18750 }
+        { cod: 'NC15', description: 'MASC. COLOR PROTECT BEIGE PERLA X 285', unitPrice: 11300 },
+        { cod: 'NC17', description: 'MASC. COLOR PROTECT CHOCOLATE LIGTH X 285', unitPrice: 11300 },
+        { cod: 'NC11', description: 'MASC. COLOR PROTECT GRIS SILVER X 285', unitPrice: 11300 },
+        { cod: 'NC13', description: 'MASC. COLOR PROTECT NEGRO NIGHT X 285', unitPrice: 11300 },
+        { cod: 'NC24', description: 'MASC. COLOR PROTECT ROJO INTENSE X 285', unitPrice: 11300 },
+        { cod: 'NC27', description: 'MASC. COLOR PROTECT VIOLETA ULTRA X 285', unitPrice: 11300 },
     ],
     'DISPLAY SHAMPOO COLOR PROTECT TONO SOBRE TONO X 30ML X 14 UNID': [
-        { cod: 'NC29', description: 'SH BEIGE PERLA', unitPrice: 33000 },
-        { cod: 'NC32', description: 'SH CHOCOLATE LIGTH', unitPrice: 33000 },
-        { cod: 'NC28', description: 'SH GRIS SILVER', unitPrice: 33000 },
-        { cod: 'NC27', description: 'SH NEGRO NIGHT', unitPrice: 33000 },
-        { cod: 'NC31', description: 'SH ROJO INTENSE', unitPrice: 33000 },
-        { cod: 'NC30', description: 'SH VIOLETA ULTRA', unitPrice: 33000 },
-        { cod: 'NC26', description: 'SH CENIZO SPECIAL', unitPrice: 33000 },
-        { cod: 'NC258', description: 'SH MECHAS BLANCAS', unitPrice: 33000 },
-        { cod: 'NC259', description: 'SH COBRE DEEP', unitPrice: 33000 }
+        { cod: 'NC35', description: 'DISPLAY SH. NEGRO NIGHT 14UX30ML', unitPrice: 34500 },
+        { cod: 'NC43', description: 'DISPLAY SH. ROJO INTENSE 14UX30ML', unitPrice: 34500 },
+        { cod: 'NC45', description: 'DISPLAY SH. CHOCOLATE LIGHT 14UX30ML', unitPrice: 34500 },
+        { cod: 'NC108', description: 'DISPLAY SH. BEIGE PERLA 14UX30ML', unitPrice: 34500 },
     ],
     'DISPLAY MASCARILLA COLOR PROTECT TONO SOBRE TONO X 30ML X 14 UNID': [
-        { cod: 'NC22', description: 'MSC BEIGE PERLA', unitPrice: 33000 },
-        { cod: 'NC25', description: 'MSC CHOCOLATE LIGTH', unitPrice: 33000 },
-        { cod: 'NC21', description: 'MSC GRIS SILVER', unitPrice: 33000 },
-        { cod: 'NC20', description: 'MSC NEGRO NIGHT', unitPrice: 33000 },
-        { cod: 'NC24', description: 'MSC ROJO INTENSE', unitPrice: 33000 },
-        { cod: 'NC23', description: 'MSC VIOLETA ULTRA', unitPrice: 33000 },
-        { cod: 'NC19', description: 'MSC CENIZO SPECIAL', unitPrice: 33000 },
-        { cod: 'NC69', description: 'MSC AZUL PLATINO', unitPrice: 33000 },
-        { cod: 'NC68', description: 'MSC COBRE DEEP', unitPrice: 33000 },
-        { cod: 'NC237', description: 'MSC MECHAS BLANCAS', unitPrice: 33000 }
+        { cod: 'NC21', description: 'DISPLAY MASC. NEGRO NIGTH 14U X30ML', unitPrice: 28700 },
+        { cod: 'NC25', description: 'DISPLAY MASC. BEIGE PERLA 14UX30ML', unitPrice: 28700 },
+        { cod: 'NC26', description: 'DISPLAY MASC. CHOCOLATE LIGTH X 14', unitPrice: 28700 },
+        { cod: 'NC22', description: 'DISPLAY MASC. GRIS SILVER X 14', unitPrice: 28700 },
+        { cod: 'NC24', description: 'DISPLAY MASC. ROJO ULTRA x 14', unitPrice: 28700 },
+        { cod: 'NC23', description: 'DISPLAY MASC. VIOLETA ULTRA X 14', unitPrice: 28700 },
+        { cod: 'NC19', description: 'DISPLAY MASC. CENIZO ESPECIAL X 14', unitPrice: 28700 },
+        { cod: 'NC69', description: 'DISPLAY MASC. AZUL PLATINO X 14', unitPrice: 28700 },
+        { cod: 'NC68', description: 'DISPLAY MASC. COBRE DEEP X 14', unitPrice: 28700 },
     ],
     'DOYPACK MASCARILLA COLOR PROTECT TONO SOBRE TONO X 100 ML': [
-        { cod: 'NC39', description: 'MSC BEIGE PERLA', unitPrice: 6600 },
-        { cod: 'NC40', description: 'MSC CHOCOLATE LIGTH', unitPrice: 6600 },
-        { cod: 'NC41', description: 'MSC GRIS SILVER', unitPrice: 6600 },
-        { cod: 'NC42', description: 'MSC NEGRO NIGHT', unitPrice: 6600 },
-        { cod: 'NC43', description: 'MSC ROJO INTENSE', unitPrice: 6600 },
-        { cod: 'NC44', description: 'MSC VIOLETA ULTRA', unitPrice: 6600 },
-        { cod: 'NC45', description: 'MSC CENIZO SPECIAL', unitPrice: 6600 },
-        { cod: 'NC85', description: 'MSC COBRE DEEP', unitPrice: 6600 },
-        { cod: 'NC86', description: 'MSC AZUL PLATINO', unitPrice: 6600 },
-        { cod: 'NC214', description: 'MSC MECHAS BLANCAS', unitPrice: 6600 }
+        { cod: 'NC39', description: 'DOY PACK MASC. COLOR BEIGE PERLA X100ML', unitPrice: 4500 },
+        { cod: 'NC40', description: 'DOY PACK MASC. COLOR CHOCOLATE X100ML', unitPrice: 4500 },
+        { cod: 'NC41', description: 'DOY PACK MASC. COLOR GRIS SILVER X100ML', unitPrice: 4500 },
+        { cod: 'NC42', description: 'DOY PACK MASC. COLOR NEGRO NIGHT X100ML', unitPrice: 4500 },
+        { cod: 'NC43', description: 'DOY PACK MASC. COLOR ROJO INTENSE X100ML', unitPrice: 4500 },
+        { cod: 'NC44', description: 'DOY PACK MASC. COLOR VIOLETA ULTRA X100ML', unitPrice: 4500 },
     ],
     'MANTEQUILLA CORPORAL X 370 ML': [
-        { cod: 'NC244', description: 'MAN. CORP FRUTOS ROJOS', unitPrice: 24000 },
-        { cod: 'NC247', description: 'MAN. CORP UVA SENTIAL', unitPrice: 24000 },
-        { cod: 'NC246', description: 'MAN. CORP MARACUYA GLITTER', unitPrice: 24000 },
-        { cod: 'NC245', description: 'MAN. CORP UNISEX AVENA', unitPrice: 24000 },
-        { cod: 'NC248', description: 'MAN. CORP . CANNABIS', unitPrice: 24000 }
+      { cod: 'NC65', description: 'MANTEQUILLA CORPORAL MARACUYA X 370', unitPrice: 16000 },
+      { cod: 'NC66', description: 'MANTEQUILLA CORPORAL SANDIA X 370', unitPrice: 16000 },
     ],
     'FRASCO MASCARILLA FANTASY COLOR PROTECT TONO SOBRE TONO X 160 ML': [
-        { cod: 'NC71', description: 'MSC AZUL FANTASY', unitPrice: 11000 },
-        { cod: 'NC73', description: 'MSC GREEN PASTEL', unitPrice: 11000 },
-        { cod: 'NC75', description: 'MSC MAGENTA PASTEL', unitPrice: 11000 },
-        { cod: 'NC74', description: 'MSC ORANGE FANTASY', unitPrice: 11000 },
-        { cod: 'NC72', description: 'MSC VIOLETA FANTASY', unitPrice: 11000 }
+      { cod: 'NC71', description: 'FANTASY AZUL X160ML', unitPrice: 11000 },
+      { cod: 'NC72', description: 'FANTASY VIOLETA X160ML', unitPrice: 11000 },
+      { cod: 'NC73', description: 'FANTASY GREEN PASTEL X160ML', unitPrice: 11000 },
+      { cod: 'NC74', description: 'FANTASY ORANGE X160ML', unitPrice: 11000 },
+      { cod: 'NC75', description: 'FANTASY MAGENTA PASTEL X160ML', unitPrice: 11000 },
     ],
     'DISPLAY MASCARILLA FANTASY COLOR PROTECT TONO SOBRE TONO X 30 ML': [
-        { cod: 'NC158', description: 'MSC AZUL FANTASY', unitPrice: 34500 },
-        { cod: 'NC156', description: 'MSC MAGENTA FANTASY', unitPrice: 34500 },
-        { cod: 'NC159', description: 'MSC ORANGE PASTEL FANTASY', unitPrice: 34500 },
-        { cod: 'NC155', description: 'MSC VERDE FANTASY', unitPrice: 34500 },
-        { cod: 'NC157', description: 'MSC VIOLETA FANTASY', unitPrice: 34500 }
+      { cod: 'NC158', description: 'MSC AZUL FANTASY', unitPrice: 34500 },
+      { cod: 'NC156', description: 'MSC MAGENTA FANTASY', unitPrice: 34500 },
+      { cod: 'NC159', description: 'MSC ORANGE PASTEL FANTASY', unitPrice: 34500 },
+      { cod: 'NC155', description: 'MSC VERDE FANTASY', unitPrice: 34500 },
+      { cod: 'NC157', description: 'MSC VIOLETA FANTASY', unitPrice: 34500 },
     ],
-    'LINEA TERMOPROTECTORA KERAMILK': [
-        { cod: 'NC37', description: 'DOYPACK SHAMPOO KERAMILK X100ML', unitPrice: 6000 },
-        { cod: 'NC03', description: 'SHAMPOO KERAMILK X 300', unitPrice: 18750 },
-        { cod: 'NC33', description: 'DISPLAY SHAMPOO KERAMILK X 14 UND', unitPrice: 33000 },
-        { cod: 'NC36', description: 'DOYPACK TRATAMIENTO KERAMILK X100ML', unitPrice: 6600 },
-        { cod: 'NC04', description: 'TRATAMIENTO KERAMILK X 300', unitPrice: 20000 },
-        { cod: 'NC216', description: 'TRATAMIENTO POTE KERAMILK X 370 ML', unitPrice: 21700 },
-        { cod: 'NC34', description: 'DISPLAY TRATAMIENTO KERAMILK X 14 UND', unitPrice: 33000 },
-        { cod: 'NC253', description: 'TERMOPROTECTOR KERAMILK SPRAY 160 ML', unitPrice: 14200 },
-        { cod: 'NC254', description: 'TERMOPROTECTOR KERAMILK SPRAY 300 ML', unitPrice: 21700 }
+    'LINEA PREMIUM HIDATACIÓN EXTREMA': [
+        { cod: 'NC3', description: 'SHAMPOO KERA-MILK X 325', unitPrice: 13000 },
+        { cod: 'NC4', description: 'TRATAMIENTO KERA-MILK X 325', unitPrice: 12500 },
     ],
-    'LINEA SUERO EMERGENCIA CAPILAR SOS': [
-        { cod: 'NC91', description: 'SOS TRATAMIENTO X 100 DOY PACK', unitPrice: 7200 },
-        { cod: 'NC215', description: 'SOS TRATAMIENTO X 370 ML', unitPrice: 24500 },
-        { cod: 'NC236', description: 'SOS SHAMPOOX 14 DISPLAY', unitPrice: 33000 },
-        { cod: 'NC90', description: 'SOS TRATAMIENTOX14 DISPLAY', unitPrice: 38200 },
-        { cod: 'NC219', description: 'SOS FRASCO SHAMPOO X 300', unitPrice: 18750 },
-        { cod: 'NC243', description: 'SHAMPOO SOS DOYPACK X 100 ML', unitPrice: 7200 }
+    'LINEA PREMIUM SOS': [
+      { cod: 'NC52', description: 'SOS CAPILAR X370ML', unitPrice: 18000 },
     ],
     'LINEA FASTMEN': [
-        { cod: 'NC55', description: 'DOY PACK FAST MEN X100ML', unitPrice: 5300 },
-        { cod: 'NC50', description: 'FAST MEN X160ML', unitPrice: 9900 },
-        { cod: 'NC217', description: 'POTE FAST MEN X 370', unitPrice: 15540 },
-        { cod: 'NC56', description: 'DISPLAY FAST MEN 14UX30ML', unitPrice: 25300 },
-        { cod: 'NC218', description: 'FRASCO SHAMPOO FAST MEN X 300 ML', unitPrice: 15500 }
+        { cod: 'NC50', description: 'FAST MEN X160ML', unitPrice: 7800 },
     ],
-    'LINEA RIZOS EFECTO MEMORIA': [
-        { cod: 'NC38', description: 'DOY PACK FIJADOR FLUIDO X100ML', unitPrice: 6000 },
-        { cod: 'NC238', description: 'FLUIDO FIJADOR X 300ML', unitPrice: 13600 },
-        { cod: 'NC35', description: 'DISPLAY FLUIDO FIJADOR X 14', unitPrice: 30000 },
-        { cod: 'NC241', description: 'SHAMPOO RIZOS X 300 ML', unitPrice: 18750 },
-        { cod: 'NC252', description: 'SHAMPOO RIZOS DOY PACK 100 ML', unitPrice: 6000 },
-        { cod: 'NC242', description: 'TRATAMIENTO RIZOS X300', unitPrice: 18800 },
-        { cod: 'NC251', description: 'TRATAMIENTO RIZOS DOY PACK 100 ML', unitPrice: 6200 },
-        { cod: 'NC249', description: 'SHAMPOO RIZOS DISP 14 X 40 ML', unitPrice: 35000 },
-        { cod: 'NC250', description: 'TRATAMIENTO RIZOS DISP 14 X 40 ML', unitPrice: 35000 },
-        { cod: 'NC260', description: 'FIJAOR FLUIDO DISP 14 X 40 ML "LLEVE 50ML"', unitPrice: 35000 }
+    'LINEA RIZOS': [
+      { cod: 'NC58', description: 'RIZOS DEFINIDOS X325ML', unitPrice: 14000 },
     ],
     'LINEA PLUS CAPILAR': [
-        { cod: 'NC02', description: 'ABLANDADOR DE CANAS CAJA X6U X30ML', unitPrice: 27000 },
-        { cod: 'NC49', description: 'SILICONA REGENERADORA UVA X55ML', unitPrice: 18500 },
-        { cod: 'NC53', description: 'CAJA X20UNDS DE SILICONA REG UVA X20ML', unitPrice: 92000 },
-        { cod: 'NC59', description: 'LACA SUAVE X160ML (Rosada)', unitPrice: 11600 },
-        { cod: 'NC60', description: 'LACA EXTRAFUERTE X160ML (Amarilla)', unitPrice: 12700 }
+      { cod: 'NC51', description: 'PLUS CAPILAR X325ML', unitPrice: 14000 },
     ],
     'LINEA SHAMPOO NEUTRO': [
         { cod: 'NC87', description: 'DOYPACK SHAMPOO NEUTRO X100ML', unitPrice: 6000 },
         { cod: 'NC63', description: 'SH. NEUTRO SPECIAL X300 ML', unitPrice: 18750 },
-        { cod: 'NC70', description: 'DISPLAY SH NEUTRO ESPECIAL X 30 ML', unitPrice: 33000 }
     ],
-    'LINEA UÑAS REMOVEDOR': [
+    'LINEA UÑAS REMOVEDOR ECOLOGICO': [
         { cod: 'NC54', description: 'REMOVEDOR ECOLOGICO X60ML', unitPrice: 3800 },
         { cod: 'NC48', description: 'REMOVEDOR ECOLOGICO X120ML', unitPrice: 6200 },
         { cod: 'NC47', description: 'REMOVEDOR ECOLOGICO X 250ML', unitPrice: 10500 },
-        { cod: 'NC220', description: 'REMOVEDOR ECOLOGICO X 350ML', unitPrice: 12000 },
-        { cod: 'NC46', description: 'REMOVEDOR ECOLOGICO X500ML', unitPrice: 16800 },
-        { cod: 'NC66', description: 'REMOVEDOR ECOLOGICO X1000ML', unitPrice: 28000 },
-        { cod: 'ESM009', description: 'UÑAS DE FELINO', unitPrice: 6950 }
     ]
 };
 
@@ -156,13 +102,13 @@ const categoryIcons = {
     'MANTEQUILLA CORPORAL X 370 ML': <Sun />,
     'FRASCO MASCARILLA FANTASY COLOR PROTECT TONO SOBRE TONO X 160 ML': <Box />,
     'DISPLAY MASCARILLA FANTASY COLOR PROTECT TONO SOBRE TONO X 30 ML': <Box />,
-    'LINEA TERMOPROTECTORA KERAMILK': <Droplet />,
-    'LINEA SUERO EMERGENCIA CAPILAR SOS': <Zap />,
+    'LINEA PREMIUM HIDATACIÓN EXTREMA': <Droplet />,
+    'LINEA PREMIUM SOS': <Zap />,
     'LINEA FASTMEN': <Zap />,
-    'LINEA RIZOS EFECTO MEMORIA': <Droplet />,
+    'LINEA RIZOS': <Droplet />,
     'LINEA PLUS CAPILAR': <Droplet />,
     'LINEA SHAMPOO NEUTRO': <Droplet />,
-    'LINEA UÑAS REMOVEDOR': <Leaf />,
+    'LINEA UÑAS REMOVEDOR ECOLOGICO': <Leaf />,
 };
 
 // Componente para la funcionalidad de Analizar Excel
@@ -175,28 +121,28 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
   const [loadingAnswer, setLoadingAnswer] = useState(false);
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-          file.type === 'application/vnd.ms-excel' ||
-          file.type === 'text/csv') {
-        setSelectedFile(file);
-        setMessage(`Archivo seleccionado: ${file.name}`);
-        setFileUploaded(false);
-        setAnswer('');
-      } else {
-        setSelectedFile(null);
-        setMessage('Por favor, sube un archivo Excel o CSV válido (.xlsx, .xls o .csv).');
-        setFileUploaded(false);
-        setAnswer('');
-      }
-    } else {
-      setSelectedFile(null);
-      setMessage('');
-      setFileUploaded(false);
-      setAnswer('');
-    }
-  };
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          file.type === 'application/vnd.ms-excel' ||
+          file.type === 'text/csv') {
+        setSelectedFile(file);
+        setMessage(`Archivo seleccionado: ${file.name}`);
+        setFileUploaded(false);
+        setAnswer('');
+      } else {
+        setSelectedFile(null);
+        setMessage('Por favor, sube un archivo Excel o CSV válido (.xlsx, .xls o .csv).');
+        setFileUploaded(false);
+        setAnswer('');
+      }
+    } else {
+      setSelectedFile(null);
+      setMessage('');
+      setFileUploaded(false);
+      setAnswer('');
+    }
+  };
 
   const handleFileUpload = async () => {
     if (!selectedFile) {
@@ -283,43 +229,42 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
       </p>
 
       {/* Sección de Subida de Archivos */}
-      <div className="mb-6 pb-6 border-b border-gray-200">
-        <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">
-          Seleccionar archivo Excel/CSV:
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          accept=".xlsx, .xls, .csv"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-900
-                       file:mr-4 file:py-2 file:px-4
-                       file:rounded-full file:border-0
-                       file:text-sm file:font-semibold
-                       file:bg-blue-50 file:text-blue-700
-                       hover:file:bg-blue-100
-                       cursor-pointer
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        {message && (
-          <p className={`text-sm mt-4 text-center ${fileUploaded ? 'text-green-600' : 'text-red-600'}`}>
-            {message}
-          </p>
-        )}
-        <button
-          onClick={handleFileUpload}
-          disabled={!selectedFile || loadingAnswer}
-          className={`w-full mt-4 py-3 px-4 rounded-lg text-white font-semibold
-                       transition duration-300 ease-in-out
-                       ${(!selectedFile || loadingAnswer)
-                         ? 'bg-gray-400 cursor-not-allowed'
-                         : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                       }`}
-          style={{ display: 'block' }} /* Asegurarse de que el botón sea visible */
-        >
-          {loadingAnswer && !fileUploaded ? 'Subiendo...' : 'Subir y Analizar Archivo'}
-        </button>
-      </div>
+      <div className="mb-6 pb-6 border-b border-gray-200">
+        <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">
+          Seleccionar archivo Excel/CSV:
+        </label>
+        <input
+          id="file-upload"
+          type="file"
+          accept=".xlsx, .xls, .csv"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-900
+                       file:mr-4 file:py-2 file:px-4
+                       file:rounded-full file:border-0
+                       file:text-sm file:font-semibold
+                       file:bg-blue-50 file:text-blue-700
+                       hover:file:bg-blue-100
+                       cursor-pointer
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        {message && (
+          <p className={`text-sm mt-4 text-center ${fileUploaded ? 'text-green-600' : 'text-red-600'}`}>
+            {message}
+          </p>
+        )}
+        <button
+          onClick={handleFileUpload}
+          disabled={!selectedFile || loadingAnswer}
+          className={`w-full mt-4 py-3 px-4 rounded-lg text-white font-semibold
+                       transition duration-300 ease-in-out
+                       ${(!selectedFile || loadingAnswer)
+                         ? 'bg-gray-400 cursor-not-allowed'
+                         : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                       }`}
+        >
+          {loadingAnswer && !fileUploaded ? 'Subiendo...' : 'Subir y Analizar Archivo'}
+        </button>
+      </div>
 
       {/* Sección de Preguntas y Respuestas */}
       {fileUploaded && (
@@ -388,7 +333,6 @@ const PedidoForm = ({ onReturnToMenu }) => {
     });
 
     const [orderItems, setOrderItems] = useState([]);
-    // Establece la categoría inicial a la primera clave de CATEGORIZED_PRODUCT_DATA
     const [selectedCategory, setSelectedCategory] = useState(Object.keys(CATEGORIZED_PRODUCT_DATA)[0]);
     const [selectedProduct, setSelectedProduct] = useState('');
     const [quantity, setQuantity] = useState(0);
@@ -398,30 +342,9 @@ const PedidoForm = ({ onReturnToMenu }) => {
     const [descuentoCalculado, setDescuentoCalculado] = useState(0);
     const [iva, setIva] = useState(0);
     const [total, setTotal] = useState(0);
-    
-    // Asegurarse de que los datos estén disponibles
-    useEffect(() => {
-        console.log('PedidoForm montado');
-        console.log('Categorías disponibles:', Object.keys(CATEGORIZED_PRODUCT_DATA));
-    }, []);
 
-    // Productos disponibles en la categoría seleccionada
     const availableProducts = CATEGORIZED_PRODUCT_DATA[selectedCategory] || [];
-    
-    // Verificar que los productos se estén cargando correctamente
-    useEffect(() => {
-        console.log('Categoría seleccionada:', selectedCategory);
-        console.log('Productos disponibles:', availableProducts);
-        // Verificar si hay algún problema con la renderización
-        if (availableProducts.length === 0) {
-            console.error('No hay productos disponibles para la categoría:', selectedCategory);
-        }
-    }, [selectedCategory, availableProducts]);
 
-    // Ya tenemos un useEffect más completo arriba que verifica los productos disponibles
-
-
-    // Recalcula los totales cada vez que los productos del pedido o el descuento cambian
     useEffect(() => {
         const newSubtotal = orderItems.reduce((sum, item) => sum + item.totalValue, 0);
         const newDescuento = newSubtotal * (parseFloat(clientInfo.descuento) / 100);
@@ -434,13 +357,11 @@ const PedidoForm = ({ onReturnToMenu }) => {
         setTotal(newTotal);
     }, [orderItems, clientInfo.descuento]);
 
-    // Maneja los cambios en la información del cliente
     const handleClientInfoChange = (e) => {
         const { name, value } = e.target;
         setClientInfo({ ...clientInfo, [name]: value });
     };
 
-    // Agrega un producto al pedido
     const handleAddProduct = () => {
         if (selectedProduct && quantity > 0) {
             const product = availableProducts.find(p => p.cod === selectedProduct);
@@ -452,69 +373,73 @@ const PedidoForm = ({ onReturnToMenu }) => {
                     totalValue: product.unitPrice * parseInt(quantity)
                 };
                 setOrderItems([...orderItems, newItem]);
-                setSelectedProduct(''); // Limpia el producto seleccionado
-                setQuantity(0); // Reinicia la cantidad
-                setBonus(0); // Reinicia la bonificación
+                setSelectedProduct('');
+                setQuantity(0);
+                setBonus(0);
             }
         }
     };
 
-    // Elimina un producto del pedido
     const handleRemoveProduct = (index) => {
         const newItems = orderItems.filter((_, i) => i !== index);
         setOrderItems(newItems);
     };
 
-    // Función para generar y descargar el archivo CSV
     const handleDownload = () => {
         const csvRows = [];
-        const numColumns = 12; // Número total de columnas en el diseño del CSV
-        
-        // Función auxiliar para generar una fila vacía con el número correcto de comas
+        const numColumns = 12;
+
         const emptyRow = () => ','.repeat(numColumns - 1) + '\n';
 
-        // --- Plantilla del encabezado CSV ---
-        csvRows.push(',TOMAPEDIDO NATURAL COLOR´S LABORATORIO S.A.S.,,,,,,,,,,,,FACTURA,\n'); // Título de la factura
-        csvRows.push(`FECHA: ${clientInfo.fecha},,NIT: ${clientInfo.nit},,,,,,VENDEDOR: ${clientInfo.vendedor},,,,ALISTO:,\n`);
-        csvRows.push(`CLIENTE: ${clientInfo.cliente},,TELEFONO: ${clientInfo.telefono},,,,,,CORREO: ${clientInfo.correo},,,,VERIFICO:,\n`);
-        csvRows.push(`DIRECCIÓN: ${clientInfo.direccion},,BARRIO: ${clientInfo.barrio},,,,,,FORMA PAGO: ${clientInfo.contado === 'X' ? 'CONTADO' : (clientInfo.credito === 'X' ? 'CRÉDITO' : '')},,,,EMPACO:,\n`);
-        csvRows.push(emptyRow()); // Fila vacía para espaciado
-        csvRows.push('FAMILIA,COD,DESCRIPCION,CANT.,BON.,V.T,,FAMILIA,COD,DESCRIPCION,CANT.,BON.,V.T\n');
-        
-        // Agrupa los productos en pares para el formato de dos columnas
+        csvRows.push(emptyRow());
+        csvRows.push(emptyRow());
+        csvRows.push(emptyRow());
+        csvRows.push(emptyRow());
+        csvRows.push(
+            `FECHA: ${clientInfo.fecha},,NIT: ${clientInfo.nit},,,,,,NOMBRE VENDEDOR: ${clientInfo.vendedor},,,\n`
+        );
+        csvRows.push(
+            `CLIENTE: ${clientInfo.cliente},,TEL: ${clientInfo.telefono},,,,,,CONTADO: ${clientInfo.contado} CRÉDITO: ${clientInfo.credito},,,\n`
+        );
+        csvRows.push(
+            `DIRECCION: ${clientInfo.direccion},,CIUDAD: ${clientInfo.ciudad},,,,,,% DESCUENTO: ${clientInfo.descuento},,,\n`
+        );
+        csvRows.push(
+            `BARRIO: ${clientInfo.barrio},,CEL: ${clientInfo.cel},,CORREO: ${clientInfo.correo},,,,,\n`
+        );
+        csvRows.push(
+            `CÓDIGO INT.,PRODUCTO,CANT,BONIF,V.U,V.TOTAL,CÓDIGO,PRODUCTO,CANT,BONIF,V.U,V.TOTAL\n`
+        );
+
         const productsInTwoColumns = [];
         for (let i = 0; i < orderItems.length; i += 2) {
             productsInTwoColumns.push([orderItems[i], orderItems[i + 1]]);
         }
 
-        // Rellena las filas con los productos del pedido
         productsInTwoColumns.forEach(pair => {
             const product1 = pair[0];
             const product2 = pair[1];
             let rowString = '';
 
             if (product1) {
-                // Asegúrate de que las descripciones que contengan comas estén entre comillas
-                rowString += `"${product1.description.split(' ')[0]}",${product1.cod},"${product1.description}",${product1.quantity},${product1.bonus},${product1.totalValue}`;
+                rowString += `${product1.cod},"${product1.description}",${product1.quantity},${product1.bonus},${product1.unitPrice},${product1.totalValue}`;
             } else {
-                // Si no hay producto, agrega las comas necesarias para alinear
                 rowString += ',,,,,';
             }
 
             if (product2) {
-                rowString += `,"${product2.description.split(' ')[0]}",${product2.cod},"${product2.description}",${product2.quantity},${product2.bonus},${product2.totalValue}`;
+                rowString += `,${product2.cod},"${product2.description}",${product2.quantity},${product2.bonus},${product2.unitPrice},${product2.totalValue}`;
             }
             csvRows.push(rowString + '\n');
         });
 
-        // Agrega el resumen de totales al final del CSV, alineando las columnas
         csvRows.push(emptyRow());
         csvRows.push(emptyRow());
         csvRows.push(',,,,,,,,,SUBTOTAL:,,' + subtotal + '\n');
         csvRows.push(',,,,,,,,,DESCUENTO:,,' + descuentoCalculado + '\n');
         csvRows.push(',,,,,,,,,IVA:,,' + iva + '\n');
         csvRows.push(',,,,,,,,,TOTAL:,,' + total + '\n');
-        
+
         const csvContent = csvRows.join('');
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -526,30 +451,10 @@ const PedidoForm = ({ onReturnToMenu }) => {
         document.body.removeChild(link);
     };
 
-    // Estado para controlar si los datos están cargados
-    const [isLoading, setIsLoading] = useState(true);
-    
-    // Verificar que los datos estén cargados
-    useEffect(() => {
-        // Simular un tiempo de carga para asegurarse de que todo esté listo
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-            console.log('Datos cargados completamente');
-        }, 500);
-        
-        return () => clearTimeout(timer);
-    }, []);
-    
     return (
         <div className="min-h-screen bg-gray-100 p-4">
             <div className="container mx-auto p-8 bg-white rounded-lg shadow-xl">
                 <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Generador de Toma de Pedido</h1>
-                
-                {isLoading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <p className="text-xl text-gray-600">Cargando datos...</p>
-                    </div>
-                ) : (
 
                 {/* Formulario de información del cliente */}
                 <div className="bg-gray-50 p-6 rounded-lg mb-8">
@@ -777,7 +682,6 @@ const PedidoForm = ({ onReturnToMenu }) => {
                         Regresar al Menú
                     </button>
                 </div>
-                )}
             </div>
         </div>
     );
@@ -786,12 +690,6 @@ const PedidoForm = ({ onReturnToMenu }) => {
 // Componente principal que maneja el menú y la renderización condicional
 const App = () => {
     const [activeOption, setActiveOption] = useState(null);
-    
-    // Asegurarse de que los datos estén disponibles al cargar la aplicación
-    useEffect(() => {
-        console.log('App montado');
-        console.log('Categorías disponibles:', Object.keys(CATEGORIZED_PRODUCT_DATA));
-    }, []);
 
     const renderContent = () => {
         switch (activeOption) {
@@ -801,31 +699,27 @@ const App = () => {
                 return <PedidoForm onReturnToMenu={() => setActiveOption(null)} />;
             default:
                 return (
-                    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
-                        <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-center">
-                            <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Menú Principal</h1>
-                            <p className="text-gray-600 mb-8">Selecciona una opción para continuar:</p>
-                            <nav className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                                <button
-                                    onClick={() => setActiveOption('analizar-excel')}
-                                    className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-blue-600 text-white hover:bg-blue-700 shadow-md transform hover:scale-105"
-                                >
-                                    Analizar Excel
-                                </button>
-                                <button
-                                    onClick={() => setActiveOption('llenado-pedido')}
-                                    className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-green-600 text-white hover:bg-green-700 shadow-md transform hover:scale-105"
-                                >
-                                    Llenado de Toma de Pedido
-                                </button>
-                                <button
-                                    disabled
-                                    className="py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 cursor-not-allowed shadow-md"
-                                >
-                                    Próximamente
-                                </button>
-                            </nav>
-                        </div>
+                    <div className="w-full max-w-2xl">
+                        <nav className="flex justify-center space-x-4">
+                            <button
+                                onClick={() => setActiveOption('analizar-excel')}
+                                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
+                            >
+                                Analizar Excel
+                            </button>
+                            <button
+                                onClick={() => setActiveOption('llenado-pedido')}
+                                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
+                            >
+                                Llenado de Toma de Pedido
+                            </button>
+                            <button
+                                disabled
+                                className="py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 cursor-not-allowed"
+                            >
+                                Próximamente
+                            </button>
+                        </nav>
                     </div>
                 );
         }

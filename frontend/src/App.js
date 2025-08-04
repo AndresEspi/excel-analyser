@@ -364,7 +364,6 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
       <button onClick={onReturnToMenu} className="mt-6 w-full py-3 px-4 rounded-lg text-white font-semibold bg-gray-500 hover:bg-gray-600 transition duration-300 ease-in-out">
         Regresar al Menú
       </button>
-      {/* Botón de regreso al menú principal */}
     </div>
   );
 };
@@ -401,6 +400,13 @@ const PedidoForm = ({ onReturnToMenu }) => {
 
     // Productos disponibles en la categoría seleccionada
     const availableProducts = CATEGORIZED_PRODUCT_DATA[selectedCategory] || [];
+
+    // Log para depuración: Verifica qué productos se están cargando para la categoría seleccionada
+    useEffect(() => {
+        console.log(`Categoría seleccionada: ${selectedCategory}`);
+        console.log('Productos disponibles en esta categoría:', availableProducts);
+    }, [selectedCategory, availableProducts]);
+
 
     // Recalcula los totales cada vez que los productos del pedido o el descuento cambian
     useEffect(() => {
@@ -755,27 +761,31 @@ const App = () => {
                 return <PedidoForm onReturnToMenu={() => setActiveOption(null)} />;
             default:
                 return (
-                    <div className="w-full max-w-2xl">
-                        <nav className="flex justify-center space-x-4">
-                            <button
-                                onClick={() => setActiveOption('analizar-excel')}
-                                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
-                            >
-                                Analizar Excel
-                            </button>
-                            <button
-                                onClick={() => setActiveOption('llenado-pedido')}
-                                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
-                            >
-                                Llenado de Toma de Pedido
-                            </button>
-                            <button
-                                disabled
-                                className="py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 cursor-not-allowed"
-                            >
-                                Próximamente
-                            </button>
-                        </nav>
+                    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-sans">
+                        <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-center">
+                            <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Menú Principal</h1>
+                            <p className="text-gray-600 mb-8">Selecciona una opción para continuar:</p>
+                            <nav className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                                <button
+                                    onClick={() => setActiveOption('analizar-excel')}
+                                    className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-blue-600 text-white hover:bg-blue-700 shadow-md transform hover:scale-105"
+                                >
+                                    Analizar Excel
+                                </button>
+                                <button
+                                    onClick={() => setActiveOption('llenado-pedido')}
+                                    className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-green-600 text-white hover:bg-green-700 shadow-md transform hover:scale-105"
+                                >
+                                    Llenado de Toma de Pedido
+                                </button>
+                                <button
+                                    disabled
+                                    className="py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 cursor-not-allowed shadow-md"
+                                >
+                                    Próximamente
+                                </button>
+                            </nav>
+                        </div>
                     </div>
                 );
         }

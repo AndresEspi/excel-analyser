@@ -302,56 +302,72 @@ const PedidoForm = ({ onReturnToMenu }) => {
 
   const handleDownload = () => {
     const csvRows = [];
-
-    // --- Plantilla del encabezado CSV (hardcodeada en el frontend) ---
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(`FECHA: ${clientInfo.fecha},,NIT: ${clientInfo.nit},,,,,NOMBRE VENDEDOR: ${clientInfo.vendedor},,,\n`);
-    csvRows.push(`CLIENTE: ${clientInfo.cliente},,TEL: ${clientInfo.telefono},,,,,CONTADO: ${clientInfo.contado} CRÉDITO: ${clientInfo.credito},,,\n`);
-    csvRows.push(`DIRECCION: ${clientInfo.direccion},,CIUDAD: ${clientInfo.ciudad},,,,,% DESCUENTO: ${clientInfo.descuento},,,\n`);
-    csvRows.push(`BARRIO: ${clientInfo.barrio},,CEL: ${clientInfo.cel},,CORREO: ${clientInfo.correo},,,,,,,,,,\n`);
-    csvRows.push('CÓDIGO INT.,PRODUCTO,CANT,BONIF,V.U,V.TOTAL,CÓDIGO,PRODUCTO,CANT,BONIF,V.U,V.TOTAL\n');
+    const numColumns = 12; // Define el número total de columnas
     
+    // Función para generar una fila vacía para el espaciado
+    const emptyRow = () => ','.repeat(numColumns - 1) + '\n';
+
+    // --- Plantilla del encabezado CSV ---
+    csvRows.push(emptyRow());
+    csvRows.push(emptyRow());
+    csvRows.push(emptyRow());
+    csvRows.push(emptyRow());
+    csvRows.push(
+      `FECHA: ${clientInfo.fecha},,NIT: ${clientInfo.nit},,,,,,NOMBRE VENDEDOR: ${clientInfo.vendedor},,,\n`
+    );
+    csvRows.push(
+      `CLIENTE: ${clientInfo.cliente},,TEL: ${clientInfo.telefono},,,,,,CONTADO: ${clientInfo.contado} CRÉDITO: ${clientInfo.credito},,,\n`
+    );
+    csvRows.push(
+      `DIRECCION: ${clientInfo.direccion},,CIUDAD: ${clientInfo.ciudad},,,,,,% DESCUENTO: ${clientInfo.descuento},,,\n`
+    );
+    csvRows.push(
+      `BARRIO: ${clientInfo.barrio},,CEL: ${clientInfo.cel},,CORREO: ${clientInfo.correo},,,,,\n`
+    );
+    csvRows.push(
+      `CÓDIGO INT.,PRODUCTO,CANT,BONIF,V.U,V.TOTAL,CÓDIGO,PRODUCTO,CANT,BONIF,V.U,V.TOTAL\n`
+    );
+
+    // Agrupa los productos en pares para el formato de dos columnas
+    const productsInTwoColumns = [];
+    for (let i = 0; i < orderItems.length; i += 2) {
+      productsInTwoColumns.push([orderItems[i], orderItems[i + 1]]);
+    }
+
     // Rellena las filas con los productos del pedido
-    const productsInTwoColumns = orderItems.reduce((acc, current, index) => {
-      const colIndex = Math.floor(index / 2);
-      if (!acc[colIndex]) acc[colIndex] = [];
-      acc[colIndex].push(current);
-      return acc;
-    }, []);
-
-    for (let i = 0; i < productsInTwoColumns.length; i++) {
-      const row = productsInTwoColumns[i];
-      const product1 = row[0];
-      const product2 = row[1];
-
+    productsInTwoColumns.forEach(pair => {
+      const product1 = pair[0];
+      const product2 = pair[1];
       let rowString = '';
+
       if (product1) {
+        // Asegúrate de que las descripciones con comas estén entre comillas
         rowString += `${product1.cod},"${product1.description}",${product1.quantity},${product1.bonus},${product1.unitPrice},${product1.totalValue}`;
+      } else {
+        // Si no hay producto, agrega las comas necesarias para alinear
+        rowString += ',,,,,';
       }
+
       if (product2) {
         rowString += `,${product2.cod},"${product2.description}",${product2.quantity},${product2.bonus},${product2.unitPrice},${product2.totalValue}`;
       }
       csvRows.push(rowString + '\n');
-    }
+    });
 
-    // Agrega el resumen de totales al final del CSV
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(',,,,,,,,,,,\n');
-    csvRows.push(`,,,,,SUBTOTAL:,,${subtotal},,,,,\n`);
-    csvRows.push(`,,,,,DESCUENTO:,,${descuentoCalculado},,,,,\n`);
-    csvRows.push(`,,,,,IVA:,,${iva},,,,,\n`);
-    csvRows.push(`,,,,,TOTAL:,,${total},,,,,\n`);
-
+    // Agrega el resumen de totales al final del CSV, alineando las columnas
+    csvRows.push(emptyRow());
+    csvRows.push(emptyRow());
+    csvRows.push(',,,,,,,,,SUBTOTAL:,,' + subtotal + '\n');
+    csvRows.push(',,,,,,,,,DESCUENTO:,,' + descuentoCalculado + '\n');
+    csvRows.push(',,,,,,,,,IVA:,,' + iva + '\n');
+    csvRows.push(',,,,,,,,,TOTAL:,,' + total + '\n');
+    
     const csvContent = csvRows.join('');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', 'remision.csv'); // Cambiado a 'remision.csv'
+    link.setAttribute('download', 'remision.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

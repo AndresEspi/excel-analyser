@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Define la URL base de tu backend desplegado en Render
 const API_BASE_URL = 'https://excel-analyser-backend.onrender.com';
 
 // Datos de productos consolidados de los archivos CSV.
+// ¡ADVERTENCIA! Si faltan productos, por favor, dime cuáles son para agregarlos aquí.
 const PRODUCT_DATA = [
   { cod: 'NC16', description: 'SH.COLOR PROTECT BEIGE PERLA', unitPrice: 11300 },
   { cod: 'NC18', description: 'SH.COLOR PROTECT CHOCOLATE LIGTH', unitPrice: 11300 },
@@ -234,7 +235,6 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
 
 // Componente para la funcionalidad de Llenado de Toma de Pedido
 const PedidoForm = ({ onReturnToMenu }) => {
-  const [templateFile, setTemplateFile] = useState(null);
   const [clientInfo, setClientInfo] = useState({
     fecha: '',
     nit: '',
@@ -245,7 +245,7 @@ const PedidoForm = ({ onReturnToMenu }) => {
     credito: '',
     direccion: '',
     ciudad: '',
-    listaPrecios: '',
+    descuento: '0', // Valor inicial de descuento
     barrio: '',
     cel: '',
     correo: ''
@@ -256,9 +256,23 @@ const PedidoForm = ({ onReturnToMenu }) => {
   const [quantity, setQuantity] = useState(0);
   const [bonus, setBonus] = useState(0);
 
-  const handleTemplateFileChange = (e) => {
-    setTemplateFile(e.target.files[0]);
-  };
+  const [subtotal, setSubtotal] = useState(0);
+  const [descuentoCalculado, setDescuentoCalculado] = useState(0);
+  const [iva, setIva] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  // Hook para recalcular los valores cada vez que el pedido o el descuento cambian
+  useEffect(() => {
+    const newSubtotal = orderItems.reduce((sum, item) => sum + item.totalValue, 0);
+    const newDescuento = newSubtotal * (parseFloat(clientInfo.descuento) / 100);
+    const newIva = newSubtotal * 0.19;
+    const newTotal = newSubtotal + newIva - newDescuento;
+
+    setSubtotal(newSubtotal);
+    setDescuentoCalculado(newDescuento);
+    setIva(newIva);
+    setTotal(newTotal);
+  }, [orderItems, clientInfo.descuento]);
 
   const handleClientInfoChange = (e) => {
     const { name, value } = e.target;
@@ -286,41 +300,61 @@ const PedidoForm = ({ onReturnToMenu }) => {
     setOrderItems(newItems);
   };
 
-  const handleDownload = async () => {
-    if (!templateFile) {
-      alert("Por favor, sube el archivo de plantilla 'FORMATO PEDIDO.csv' primero.");
-      return;
-    }
+  const handleDownload = () => {
+    const csvRows = [];
 
-    try {
-      const formData = new FormData();
-      formData.append('templateFile', templateFile);
-      formData.append('clientInfo', JSON.stringify(clientInfo));
-      formData.append('orderItems', JSON.stringify(orderItems));
+    // --- Plantilla del encabezado CSV (hardcodeada en el frontend) ---
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(`FECHA: ${clientInfo.fecha},,NIT: ${clientInfo.nit},,,,,NOMBRE VENDEDOR: ${clientInfo.vendedor},,,\n`);
+    csvRows.push(`CLIENTE: ${clientInfo.cliente},,TEL: ${clientInfo.telefono},,,,,CONTADO: ${clientInfo.contado} CRÉDITO: ${clientInfo.credito},,,\n`);
+    csvRows.push(`DIRECCION: ${clientInfo.direccion},,CIUDAD: ${clientInfo.ciudad},,,,,% DESCUENTO: ${clientInfo.descuento},,,\n`);
+    csvRows.push(`BARRIO: ${clientInfo.barrio},,CEL: ${clientInfo.cel},,CORREO: ${clientInfo.correo},,,,,,,,,,\n`);
+    csvRows.push('CÓDIGO INT.,PRODUCTO,CANT,BONIF,V.U,V.TOTAL,CÓDIGO,PRODUCTO,CANT,BONIF,V.U,V.TOTAL\n');
+    
+    // Rellena las filas con los productos del pedido
+    const productsInTwoColumns = orderItems.reduce((acc, current, index) => {
+      const colIndex = Math.floor(index / 2);
+      if (!acc[colIndex]) acc[colIndex] = [];
+      acc[colIndex].push(current);
+      return acc;
+    }, []);
 
-      // Reemplaza la URL con la dirección de tu nuevo endpoint de backend
-      const response = await fetch(`${API_BASE_URL}/fill-pedido-template`, { 
-        method: 'POST',
-        body: formData,
-      });
+    for (let i = 0; i < productsInTwoColumns.length; i++) {
+      const row = productsInTwoColumns[i];
+      const product1 = row[0];
+      const product2 = row[1];
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', 'pedido_completado.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        const errorData = await response.json();
-        alert(`Error del servidor: ${errorData.error}`);
+      let rowString = '';
+      if (product1) {
+        rowString += `${product1.cod},"${product1.description}",${product1.quantity},${product1.bonus},${product1.unitPrice},${product1.totalValue}`;
       }
-    } catch (error) {
-      console.error('Error al enviar los datos:', error);
-      alert('Hubo un problema de conexión al intentar generar el archivo. Asegúrate de que el backend esté corriendo.');
+      if (product2) {
+        rowString += `,${product2.cod},"${product2.description}",${product2.quantity},${product2.bonus},${product2.unitPrice},${product2.totalValue}`;
+      }
+      csvRows.push(rowString + '\n');
     }
+
+    // Agrega el resumen de totales al final del CSV
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(',,,,,,,,,,,\n');
+    csvRows.push(`,,,,,SUBTOTAL:,,${subtotal},,,,,\n`);
+    csvRows.push(`,,,,,DESCUENTO:,,${descuentoCalculado},,,,,\n`);
+    csvRows.push(`,,,,,IVA:,,${iva},,,,,\n`);
+    csvRows.push(`,,,,,TOTAL:,,${total},,,,,\n`);
+
+    const csvContent = csvRows.join('');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'remision.csv'); // Cambiado a 'remision.csv'
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -328,30 +362,9 @@ const PedidoForm = ({ onReturnToMenu }) => {
       <div className="container mx-auto p-8 bg-white rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Generador de Toma de Pedido</h1>
 
-        {/* Sección de Subir Plantilla */}
-        <div className="bg-blue-50 p-6 rounded-lg mb-8">
-            <h2 className="text-xl font-semibold mb-4 text-blue-700">Paso 1: Subir la Plantilla del Pedido</h2>
-            <p className="text-gray-600 mb-4">Sube el archivo `TOMA PEDIDO NATURAL 2025.xlsx - FORMATO PEDIDO.csv` que usaremos como plantilla.</p>
-            <input 
-              type="file" 
-              accept=".csv"
-              onChange={handleTemplateFileChange} 
-              className="block w-full text-sm text-gray-900
-                       file:mr-4 file:py-2 file:px-4
-                       file:rounded-full file:border-0
-                       file:text-sm file:font-semibold
-                       file:bg-blue-100 file:text-blue-700
-                       hover:file:bg-blue-200
-                       cursor-pointer"
-            />
-            {templateFile && (
-                <p className="mt-2 text-sm text-green-600">Plantilla seleccionada: {templateFile.name}</p>
-            )}
-        </div>
-
         {/* Formulario de información del cliente */}
         <div className="bg-gray-50 p-6 rounded-lg mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Paso 2: Información del Cliente</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Información del Cliente</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-600 mb-1">Fecha:</label>
@@ -393,8 +406,8 @@ const PedidoForm = ({ onReturnToMenu }) => {
               <input type="text" name="ciudad" value={clientInfo.ciudad} onChange={handleClientInfoChange} className="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-600 mb-1">Lista de Precios:</label>
-              <input type="text" name="listaPrecios" value={clientInfo.listaPrecios} onChange={handleClientInfoChange} className="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
+              <label className="text-sm font-medium text-gray-600 mb-1">Descuento (%):</label>
+              <input type="number" name="descuento" value={clientInfo.descuento} onChange={handleClientInfoChange} min="0" max="100" className="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-600 mb-1">Barrio:</label>
@@ -413,7 +426,7 @@ const PedidoForm = ({ onReturnToMenu }) => {
 
         {/* Sección de agregar productos */}
         <div className="bg-gray-50 p-6 rounded-lg mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Paso 3: Agregar Productos</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Agregar Productos</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-600 mb-1">Producto:</label>
@@ -476,11 +489,36 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </div>
           </div>
         )}
+        
+        {/* Sección de Resumen de Totales */}
+        {orderItems.length > 0 && (
+          <div className="bg-gray-100 p-6 rounded-lg mt-8 border border-gray-200">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Resumen del Pedido</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+              <p className="flex justify-between font-bold text-gray-800">
+                <span>Subtotal:</span>
+                <span>${subtotal.toLocaleString('es-CO')}</span>
+              </p>
+              <p className="flex justify-between text-gray-700">
+                <span>Descuento ({clientInfo.descuento}%):</span>
+                <span>-${descuentoCalculado.toLocaleString('es-CO')}</span>
+              </p>
+              <p className="flex justify-between text-gray-700">
+                <span>IVA (19%):</span>
+                <span>+${iva.toLocaleString('es-CO')}</span>
+              </p>
+              <p className="flex justify-between font-bold text-green-600 text-2xl">
+                <span>Total:</span>
+                <span>${total.toLocaleString('es-CO')}</span>
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Botón de descarga y regresar */}
-        <div className="flex justify-center space-x-4">
-          <button onClick={handleDownload} className="bg-green-600 text-white font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
-            Descargar Pedido Diligenciado
+        <div className="flex justify-center space-x-4 mt-8">
+          <button onClick={handleDownload} className="bg-green-600 text-white font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105" disabled={orderItems.length === 0}>
+            Descargar Remisión
           </button>
           <button onClick={onReturnToMenu} className="bg-gray-500 text-white font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-gray-600 transition duration-300 transform hover:scale-105">
             Regresar al Menú

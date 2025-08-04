@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Box, Droplet, Sun, Zap, Leaf, ChevronLeft } from 'lucide-react';
 
 // Define la URL base de tu backend desplegado en Render
-const API_BASE_URL = 'https://excel-analyser-backend.onrender.com';
+const API_BASE_URL = 'https://excel-analyser-backend.onrender.com'; // URL actualizada para Render
 
 // Datos de productos consolidados y categorizados.
 // Esta estructura permite organizar los productos por categorías.

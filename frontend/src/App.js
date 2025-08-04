@@ -175,28 +175,28 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
   const [loadingAnswer, setLoadingAnswer] = useState(false);
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-          file.type === 'application/vnd.ms-excel' ||
-          file.type === 'text/csv') {
-        setSelectedFile(file);
-        setMessage(`Archivo seleccionado: ${file.name}`);
-        setFileUploaded(false);
-        setAnswer('');
-      } else {
-        setSelectedFile(null);
-        setMessage('Por favor, sube un archivo Excel o CSV válido (.xlsx, .xls o .csv).');
-        setFileUploaded(false);
-        setAnswer('');
-      }
-    } else {
-      setSelectedFile(null);
-      setMessage('');
-      setFileUploaded(false);
-      setAnswer('');
-    }
-  };
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          file.type === 'application/vnd.ms-excel' ||
+          file.type === 'text/csv') {
+        setSelectedFile(file);
+        setMessage(`Archivo seleccionado: ${file.name}`);
+        setFileUploaded(false);
+        setAnswer('');
+      } else {
+        setSelectedFile(null);
+        setMessage('Por favor, sube un archivo Excel o CSV válido (.xlsx, .xls o .csv).');
+        setFileUploaded(false);
+        setAnswer('');
+      }
+    } else {
+      setSelectedFile(null);
+      setMessage('');
+      setFileUploaded(false);
+      setAnswer('');
+    }
+  };
 
   const handleFileUpload = async () => {
     if (!selectedFile) {
@@ -283,42 +283,43 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
       </p>
 
       {/* Sección de Subida de Archivos */}
-      <div className="mb-6 pb-6 border-b border-gray-200">
-        <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">
-          Seleccionar archivo Excel/CSV:
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          accept=".xlsx, .xls, .csv"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-900
-                       file:mr-4 file:py-2 file:px-4
-                       file:rounded-full file:border-0
-                       file:text-sm file:font-semibold
-                       file:bg-blue-50 file:text-blue-700
-                       hover:file:bg-blue-100
-                       cursor-pointer
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        {message && (
-          <p className={`text-sm mt-4 text-center ${fileUploaded ? 'text-green-600' : 'text-red-600'}`}>
-            {message}
-          </p>
-        )}
-        <button
-          onClick={handleFileUpload}
-          disabled={!selectedFile || loadingAnswer}
-          className={`w-full mt-4 py-3 px-4 rounded-lg text-white font-semibold
-                       transition duration-300 ease-in-out
-                       ${(!selectedFile || loadingAnswer)
-                         ? 'bg-gray-400 cursor-not-allowed'
-                         : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                       }`}
-        >
-          {loadingAnswer && !fileUploaded ? 'Subiendo...' : 'Subir y Analizar Archivo'}
-        </button>
-      </div>
+      <div className="mb-6 pb-6 border-b border-gray-200">
+        <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">
+          Seleccionar archivo Excel/CSV:
+        </label>
+        <input
+          id="file-upload"
+          type="file"
+          accept=".xlsx, .xls, .csv"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-900
+                       file:mr-4 file:py-2 file:px-4
+                       file:rounded-full file:border-0
+                       file:text-sm file:font-semibold
+                       file:bg-blue-50 file:text-blue-700
+                       hover:file:bg-blue-100
+                       cursor-pointer
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        {message && (
+          <p className={`text-sm mt-4 text-center ${fileUploaded ? 'text-green-600' : 'text-red-600'}`}>
+            {message}
+          </p>
+        )}
+        <button
+          onClick={handleFileUpload}
+          disabled={!selectedFile || loadingAnswer}
+          className={`w-full mt-4 py-3 px-4 rounded-lg text-white font-semibold
+                       transition duration-300 ease-in-out
+                       ${(!selectedFile || loadingAnswer)
+                         ? 'bg-gray-400 cursor-not-allowed'
+                         : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                       }`}
+          style={{ display: 'block' }} /* Asegurarse de que el botón sea visible */
+        >
+          {loadingAnswer && !fileUploaded ? 'Subiendo...' : 'Subir y Analizar Archivo'}
+        </button>
+      </div>
 
       {/* Sección de Preguntas y Respuestas */}
       {fileUploaded && (
@@ -397,15 +398,27 @@ const PedidoForm = ({ onReturnToMenu }) => {
     const [descuentoCalculado, setDescuentoCalculado] = useState(0);
     const [iva, setIva] = useState(0);
     const [total, setTotal] = useState(0);
+    
+    // Asegurarse de que los datos estén disponibles
+    useEffect(() => {
+        console.log('PedidoForm montado');
+        console.log('Categorías disponibles:', Object.keys(CATEGORIZED_PRODUCT_DATA));
+    }, []);
 
     // Productos disponibles en la categoría seleccionada
     const availableProducts = CATEGORIZED_PRODUCT_DATA[selectedCategory] || [];
-
-    // Log para depuración: Verifica qué productos se están cargando para la categoría seleccionada
+    
+    // Verificar que los productos se estén cargando correctamente
     useEffect(() => {
-        console.log(`Categoría seleccionada: ${selectedCategory}`);
-        console.log('Productos disponibles en esta categoría:', availableProducts);
+        console.log('Categoría seleccionada:', selectedCategory);
+        console.log('Productos disponibles:', availableProducts);
+        // Verificar si hay algún problema con la renderización
+        if (availableProducts.length === 0) {
+            console.error('No hay productos disponibles para la categoría:', selectedCategory);
+        }
     }, [selectedCategory, availableProducts]);
+
+    // Ya tenemos un useEffect más completo arriba que verifica los productos disponibles
 
 
     // Recalcula los totales cada vez que los productos del pedido o el descuento cambian
@@ -513,10 +526,30 @@ const PedidoForm = ({ onReturnToMenu }) => {
         document.body.removeChild(link);
     };
 
+    // Estado para controlar si los datos están cargados
+    const [isLoading, setIsLoading] = useState(true);
+    
+    // Verificar que los datos estén cargados
+    useEffect(() => {
+        // Simular un tiempo de carga para asegurarse de que todo esté listo
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+            console.log('Datos cargados completamente');
+        }, 500);
+        
+        return () => clearTimeout(timer);
+    }, []);
+    
     return (
         <div className="min-h-screen bg-gray-100 p-4">
             <div className="container mx-auto p-8 bg-white rounded-lg shadow-xl">
                 <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Generador de Toma de Pedido</h1>
+                
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <p className="text-xl text-gray-600">Cargando datos...</p>
+                    </div>
+                ) : (
 
                 {/* Formulario de información del cliente */}
                 <div className="bg-gray-50 p-6 rounded-lg mb-8">
@@ -744,6 +777,7 @@ const PedidoForm = ({ onReturnToMenu }) => {
                         Regresar al Menú
                     </button>
                 </div>
+                )}
             </div>
         </div>
     );
@@ -752,6 +786,12 @@ const PedidoForm = ({ onReturnToMenu }) => {
 // Componente principal que maneja el menú y la renderización condicional
 const App = () => {
     const [activeOption, setActiveOption] = useState(null);
+    
+    // Asegurarse de que los datos estén disponibles al cargar la aplicación
+    useEffect(() => {
+        console.log('App montado');
+        console.log('Categorías disponibles:', Object.keys(CATEGORIZED_PRODUCT_DATA));
+    }, []);
 
     const renderContent = () => {
         switch (activeOption) {

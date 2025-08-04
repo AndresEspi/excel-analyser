@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
-// Se ha consolidado la lista de productos y precios de los archivos CSV.
-// NOTA: Se ha tomado como referencia principal el archivo "FORMATO PEDIDO.csv".
+// Define la URL base de tu backend desplegado en Render
+const API_BASE_URL = 'https://excel-analyser-backend.onrender.com';
+
+// Datos de productos consolidados de los archivos CSV.
 const PRODUCT_DATA = [
   { cod: 'NC16', description: 'SH.COLOR PROTECT BEIGE PERLA', unitPrice: 11300 },
   { cod: 'NC18', description: 'SH.COLOR PROTECT CHOCOLATE LIGTH', unitPrice: 11300 },
@@ -27,8 +29,211 @@ const PRODUCT_DATA = [
   { cod: 'NC44', description: 'DOY PACK MASC. COLOR VIOLETA ULTRA X100ML', unitPrice: 4500 },
 ];
 
-const App = () => {
-  // Estado para la información del cliente
+// Componente para la funcionalidad de Analizar Excel
+const ExcelAnalyser = ({ onReturnToMenu }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [message, setMessage] = useState('');
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [loadingAnswer, setLoadingAnswer] = useState(false);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          file.type === 'application/vnd.ms-excel' ||
+          file.type === 'text/csv') {
+        setSelectedFile(file);
+        setMessage(`Archivo seleccionado: ${file.name}`);
+        setFileUploaded(false);
+        setAnswer('');
+      } else {
+        setSelectedFile(null);
+        setMessage('Por favor, sube un archivo Excel o CSV válido (.xlsx, .xls o .csv).');
+        setFileUploaded(false);
+        setAnswer('');
+      }
+    } else {
+      setSelectedFile(null);
+      setMessage('');
+      setFileUploaded(false);
+      setAnswer('');
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
+      setMessage('Por favor, selecciona un archivo primero.');
+      return;
+    }
+
+    setMessage('Subiendo archivo...');
+    setLoadingAnswer(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('excelFile', selectedFile);
+
+      const response = await fetch(`${API_BASE_URL}/upload`, { 
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage(`"${selectedFile.name}" subido y procesado con éxito. Columnas: ${data.columns.join(', ')}. Filas: ${data.rows_count}`);
+        setFileUploaded(true);
+        setAnswer('');
+      } else {
+        const errorData = await response.json();
+        setMessage(`Error al subir el archivo: ${errorData.error}`);
+        setFileUploaded(false);
+      }
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+      setMessage('Hubo un problema de conexión con el servidor. Asegúrate de que el backend esté corriendo.');
+      setFileUploaded(false);
+    } finally {
+      setLoadingAnswer(false);
+    }
+  };
+
+  const handleAskQuestion = async () => {
+    if (!question.trim()) {
+      setAnswer('Por favor, escribe una pregunta.');
+      return;
+    }
+    if (!fileUploaded) {
+      setAnswer('Por favor, sube un archivo Excel primero para hacer preguntas.');
+      return;
+    }
+
+    setLoadingAnswer(true);
+    setAnswer('Obteniendo respuesta...');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/ask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: question }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setAnswer(data.answer);
+      } else {
+        const errorData = await response.json();
+        setAnswer(`Error al obtener respuesta: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error al enviar la pregunta:', error);
+      setAnswer('Hubo un problema de conexión al intentar obtener la respuesta.');
+    } finally {
+      setLoadingAnswer(false);
+    }
+  };
+
+  return (
+    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
+      <h1 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
+        Analizador de Archivos Excel
+      </h1>
+
+      <p className="text-gray-600 mb-6 text-center">
+        Sube tu archivo .xlsx, .xls o .csv para empezar a analizar tus datos.
+      </p>
+
+      {/* Sección de Subida de Archivos */}
+      <div className="mb-6 pb-6 border-b border-gray-200">
+        <label htmlFor="file-upload" className="block text-sm font-medium text-gray-700 mb-2">
+          Seleccionar archivo Excel/CSV:
+        </label>
+        <input
+          id="file-upload"
+          type="file"
+          accept=".xlsx, .xls, .csv"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-900
+                       file:mr-4 file:py-2 file:px-4
+                       file:rounded-full file:border-0
+                       file:text-sm file:font-semibold
+                       file:bg-blue-50 file:text-blue-700
+                       hover:file:bg-blue-100
+                       cursor-pointer
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        {message && (
+          <p className={`text-sm mt-4 text-center ${fileUploaded ? 'text-green-600' : 'text-red-600'}`}>
+            {message}
+          </p>
+        )}
+        <button
+          onClick={handleFileUpload}
+          disabled={!selectedFile || loadingAnswer}
+          className={`w-full mt-4 py-3 px-4 rounded-lg text-white font-semibold
+                       transition duration-300 ease-in-out
+                       ${(!selectedFile || loadingAnswer)
+                         ? 'bg-gray-400 cursor-not-allowed'
+                         : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                       }`}
+        >
+          {loadingAnswer && !fileUploaded ? 'Subiendo...' : 'Subir y Analizar Archivo'}
+        </button>
+      </div>
+
+      {/* Sección de Preguntas y Respuestas */}
+      {fileUploaded && (
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+            Haz una Pregunta sobre los Datos
+          </h2>
+          <div className="mb-4">
+            <label htmlFor="question-input" className="block text-sm font-medium text-gray-700 mb-2">
+              Tu pregunta:
+            </label>
+            <textarea
+              id="question-input"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 resize-y"
+              rows="3"
+              placeholder="Ej: ¿Cuántos clientes hay en Bogotá?"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              disabled={loadingAnswer}
+            ></textarea>
+          </div>
+          <button
+            onClick={handleAskQuestion}
+            disabled={loadingAnswer || !question.trim()}
+            className={`w-full py-3 px-4 rounded-lg text-white font-semibold
+                         transition duration-300 ease-in-out
+                         ${(loadingAnswer || !question.trim())
+                           ? 'bg-gray-400 cursor-not-allowed'
+                           : 'bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                         }`}
+          >
+            {loadingAnswer ? 'Procesando...' : 'Obtener Respuesta'}
+          </button>
+
+          {answer && (
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h3 className="text-lg font-semibold text-blue-800 mb-2">Respuesta:</h3>
+              <p className="text-gray-800 whitespace-pre-wrap">{answer}</p>
+            </div>
+          )}
+        </div>
+      )}
+      <button onClick={onReturnToMenu} className="mt-6 w-full py-3 px-4 rounded-lg text-white font-semibold bg-gray-500 hover:bg-gray-600 transition duration-300 ease-in-out">
+        Regresar al Menú
+      </button>
+    </div>
+  );
+};
+
+// Componente para la funcionalidad de Llenado de Toma de Pedido
+const PedidoForm = ({ onReturnToMenu }) => {
   const [clientInfo, setClientInfo] = useState({
     fecha: '',
     nit: '',
@@ -45,19 +250,16 @@ const App = () => {
     correo: ''
   });
 
-  // Estado para los productos en el pedido
   const [orderItems, setOrderItems] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [bonus, setBonus] = useState(0);
 
-  // Maneja cambios en los campos de información del cliente
   const handleClientInfoChange = (e) => {
     const { name, value } = e.target;
     setClientInfo({ ...clientInfo, [name]: value });
   };
 
-  // Maneja la adición de un nuevo producto al pedido
   const handleAddProduct = () => {
     if (selectedProduct && quantity > 0) {
       const product = PRODUCT_DATA.find(p => p.cod === selectedProduct);
@@ -74,13 +276,11 @@ const App = () => {
     }
   };
 
-  // Maneja la eliminación de un producto del pedido
   const handleRemoveProduct = (index) => {
     const newItems = orderItems.filter((_, i) => i !== index);
     setOrderItems(newItems);
   };
 
-  // Función para generar y descargar el archivo CSV
   const handleDownload = () => {
     const csvRows = [];
 
@@ -263,13 +463,61 @@ const App = () => {
           </div>
         )}
 
-        {/* Botón de descarga */}
-        <div className="flex justify-center">
+        {/* Botón de descarga y regresar */}
+        <div className="flex justify-center space-x-4">
           <button onClick={handleDownload} className="bg-green-600 text-white font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
             Descargar Pedido
           </button>
+          <button onClick={onReturnToMenu} className="bg-gray-500 text-white font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-gray-600 transition duration-300 transform hover:scale-105">
+            Regresar al Menú
+          </button>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Componente principal que maneja el menú y la renderización condicional
+const App = () => {
+  const [activeOption, setActiveOption] = useState(null); // Empezamos con null para que se muestre el menú
+
+  const renderContent = () => {
+    switch (activeOption) {
+      case 'analizar-excel':
+        return <ExcelAnalyser onReturnToMenu={() => setActiveOption(null)} />;
+      case 'llenado-pedido':
+        return <PedidoForm onReturnToMenu={() => setActiveOption(null)} />;
+      default:
+        return (
+          <div className="w-full max-w-2xl">
+            <nav className="flex justify-center space-x-4">
+              <button
+                onClick={() => setActiveOption('analizar-excel')}
+                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
+              >
+                Analizar Excel
+              </button>
+              <button
+                onClick={() => setActiveOption('llenado-pedido')}
+                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
+              >
+                Llenado de Toma de Pedido
+              </button>
+              <button
+                disabled
+                className="py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 cursor-not-allowed"
+              >
+                Próximamente
+              </button>
+            </nav>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4 font-sans">
+      {renderContent()}
     </div>
   );
 };

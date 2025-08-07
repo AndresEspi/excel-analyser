@@ -1061,23 +1061,23 @@ const App = () => {
         return <PedidoForm onReturnToMenu={() => setActiveOption(null)} />;
       default:
         return (
-          <div className="w-full max-w-2xl">
-            <nav className="flex justify-center space-x-4">
+          <div className="w-full max-w-2xl px-4">
+            <nav className="flex flex-col sm:flex-row justify-center gap-4">
               <button
                 onClick={() => setActiveOption("analizar-excel")}
-                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
+                className="py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md w-full sm:w-auto"
               >
                 Analizar Excel
               </button>
               <button
                 onClick={() => setActiveOption("llenado-pedido")}
-                className="py-3 px-6 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md"
+                className="py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition duration-300 ease-in-out bg-white text-gray-700 hover:bg-gray-100 shadow-md w-full sm:w-auto"
               >
-                Llenado de Toma de Pedido
+                Llenado de Pedido
               </button>
               <button
                 disabled
-                className="py-3 px-6 rounded-lg font-semibold text-lg bg-gray-300 text-gray-600 cursor-not-allowed"
+                className="py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg bg-gray-300 text-gray-600 cursor-not-allowed w-full sm:w-auto"
               >
                 Próximamente
               </button>

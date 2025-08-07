@@ -623,66 +623,234 @@ const PedidoForm = ({ onReturnToMenu }) => {
   };
 
   const handleDownload = () => {
-    const csvRows = [];
-    
     // Calcular totales antes de usarlos
     const subtotalGlobal = orderItems.reduce((sum, item) => sum + (item.subtotal || 0), 0);
     const descuentoGlobal = subtotalGlobal * (parseInt(clientInfo.descuento || 0) / 100);
     const ivaGlobal = subtotalGlobal * 0.19;
     const totalGlobal = subtotalGlobal + ivaGlobal - descuentoGlobal;
 
-    // --- Encabezado de la plantilla CSV (según el archivo FORMATO PEDIDO.csv) ---
-    csvRows.push(",,,,,,,,,,,\n");
-    csvRows.push(",,,,,,,,,,,\n");
-    csvRows.push(",,,,,,,,,,,\n");
-    csvRows.push(",,,,,,,,,,,\n");
-    csvRows.push(
-      `FECHA: ${clientInfo.fecha},,NIT: ${clientInfo.nit},,,,,NOMBRE VENDEDOR: ${clientInfo.vendedor},,,\n`
-    );
-    csvRows.push(
-      `CLIENTE: ${clientInfo.cliente},,TEL: ${clientInfo.telefono},,,,,CONTADO: ${clientInfo.contado} CRÉDITO: ${clientInfo.credito},,,\n`
-    );
-    csvRows.push(
-      `DIRECCION: ${clientInfo.direccion},,CIUDAD: ${clientInfo.ciudad},,,,,LISTA PRECIOS: ${clientInfo.listaPrecios},,,\n`
-    );
-    csvRows.push(
-      `BARRIO: ${clientInfo.barrio},,CEL: ${clientInfo.cel},,CORREO: ${clientInfo.correo},,,,,,,,,,\n`
-    );
-    csvRows.push(
-      "CÓDIGO INT.,PRODUCTO,CANT,BONIF,V.U,V.TOTAL,CÓDIGO,PRODUCTO,CANT,BONIF,V.U,V.TOTAL\n"
-    );
-    csvRows.push(`SUBTOTAL: ${subtotalGlobal.toLocaleString("es-CO")},,,DESCUENTO: ${descuentoGlobal.toLocaleString("es-CO")},,,IVA: ${ivaGlobal.toLocaleString("es-CO")},,,TOTAL: ${totalGlobal.toLocaleString("es-CO")}\n`);
+    // Crear el contenido HTML basado en la imagen proporcionada
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Orden de Pedido - Natural Colors</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+          color: #333;
+        }
+        .container {
+          max-width: 800px;
+          margin: 0 auto;
+          border: 1px solid #ccc;
+          padding: 20px;
+        }
+        .header {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        .header h1 {
+          color: #1e3a5f;
+          margin-bottom: 5px;
+        }
+        .header h2 {
+          color: #666;
+          font-weight: normal;
+          margin-top: 0;
+        }
+        .fecha {
+          margin-bottom: 15px;
+          font-size: 14px;
+        }
+        .info-row {
+          display: flex;
+          margin-bottom: 10px;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 5px;
+        }
+        .info-label {
+          font-weight: bold;
+          width: 100px;
+        }
+        .info-value {
+          flex: 1;
+        }
+        .info-section {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+        }
+        .info-column {
+          width: 48%;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+        th {
+          background-color: #f2f2f2;
+          text-align: left;
+          padding: 8px;
+          border-bottom: 2px solid #ddd;
+        }
+        td {
+          padding: 8px;
+          border-bottom: 1px solid #ddd;
+        }
+        .text-right {
+          text-align: right;
+        }
+        .text-center {
+          text-align: center;
+        }
+        .totals {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+          font-weight: bold;
+        }
+        .total {
+          color: #006400;
+          font-size: 18px;
+        }
+        .signatures {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 50px;
+        }
+        .signature {
+          width: 200px;
+          text-align: center;
+          border-top: 1px solid #333;
+          padding-top: 5px;
+        }
+        .observations {
+          margin-top: 30px;
+        }
+        .observations-box {
+          border: 1px solid #ccc;
+          padding: 10px;
+          min-height: 60px;
+        }
+        .delivery-date {
+          margin-top: 20px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>NATURAL COLORS</h1>
+          <h2>ORDEN DE PEDIDO</h2>
+        </div>
+        
+        <div class="fecha">Fecha: ${clientInfo.fecha}</div>
+        
+        <div class="info-section">
+          <div class="info-column">
+            <div class="info-row">
+              <div class="info-label">CLIENTE:</div>
+              <div class="info-value">${clientInfo.cliente}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">DIRECCIÓN:</div>
+              <div class="info-value">${clientInfo.direccion}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Barrio:</div>
+              <div class="info-value">${clientInfo.barrio} - ${clientInfo.ciudad}</div>
+            </div>
+          </div>
+          
+          <div class="info-column">
+            <div class="info-row">
+              <div class="info-label">NIT:</div>
+              <div class="info-value">${clientInfo.nit}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Vendedor:</div>
+              <div class="info-value">${clientInfo.vendedor}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Tel:</div>
+              <div class="info-value">${clientInfo.telefono}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Cel:</div>
+              <div class="info-value">${clientInfo.cel}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Forma pago:</div>
+              <div class="info-value">${clientInfo.contado === 'X' ? 'CONTADO' : 'CRÉDITO'}</div>
+            </div>
+          </div>
+        </div>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>CÓD</th>
+              <th>DESCRIPCIÓN</th>
+              <th class="text-center">CANT</th>
+              <th class="text-center">BON</th>
+              <th class="text-right">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orderItems.map(item => `
+              <tr>
+                <td>${item.cod}</td>
+                <td>${item.description}</td>
+                <td class="text-center">${item.quantity}</td>
+                <td class="text-center">${item.bonus}</td>
+                <td class="text-right">$${item.subtotal?.toLocaleString("es-CO")}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        
+        <div class="totals">
+          <div>
+            <div>SUBTOTAL: $${subtotalGlobal.toLocaleString("es-CO")}</div>
+            <div>DESCUENTO(${clientInfo.descuento || 0}%): $${descuentoGlobal.toLocaleString("es-CO")}</div>
+            <div>IVA(19%): $${ivaGlobal.toLocaleString("es-CO")}</div>
+          </div>
+          <div class="total">TOTAL: $${totalGlobal.toLocaleString("es-CO")}</div>
+        </div>
+        
+        <div class="signatures">
+          <div class="signature">ALISTÓ</div>
+          <div class="signature">VERIFICÓ</div>
+          <div class="signature">EMPACÓ</div>
+          <div class="signature">FIRMA CLIENTE</div>
+        </div>
+        <div class="observations-box"></div>
+        
+        <div class="observations">
+          <div>OBSERVACIONES:</div>
+          <div class="observations-box"></div>
+        </div>
+        
+        <div class="delivery-date">
+          FECHA ENTREGA: ________________
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
 
-    // Asumimos que los productos se llenan de izquierda a derecha.
-    const productsInTwoColumns = orderItems.reduce((acc, current, index) => {
-      const colIndex = Math.floor(index / 2);
-      if (!acc[colIndex]) acc[colIndex] = [];
-      acc[colIndex].push(current);
-      return acc;
-    }, []);
-
-    // Rellena las filas con los productos del pedido
-    for (let i = 0; i < productsInTwoColumns.length; i++) {
-      const row = productsInTwoColumns[i];
-      const product1 = row[0];
-      const product2 = row[1];
-
-      let rowString = "";
-      if (product1) {
-        rowString += `${product1.cod},"${product1.description}",${product1.quantity},${product1.bonus},${product1.unitPrice},${product1.totalValue}`;
-      }
-      if (product2) {
-        rowString += `,${product2.cod},"${product2.description}",${product2.quantity},${product2.bonus},${product2.unitPrice},${product2.totalValue}`;
-      }
-      csvRows.push(rowString + "\n");
-    }
-
-    const csvContent = csvRows.join("");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    // Crear el blob y descargar
+    const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "pedido_completado.csv");
+    link.setAttribute("download", "orden_de_pedido.html");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1035,7 +1203,7 @@ const PedidoForm = ({ onReturnToMenu }) => {
             onClick={handleDownload}
             className="bg-green-600 text-white font-bold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105"
           >
-            Descargar Pedido
+            Generar Orden de Pedido
           </button>
           <button
             onClick={onReturnToMenu}

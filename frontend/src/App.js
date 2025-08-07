@@ -596,13 +596,16 @@ const PedidoForm = ({ onReturnToMenu }) => {
       
     if (!product) return;
 
+    // Nueva lógica: La bonificación es adicional y no se resta del subtotal
+    // El subtotal ahora se calcula multiplicando el precio unitario por la cantidad
+    // sin restar la bonificación, ya que la bonificación es gratis
     const newItem = {
       cod: product.cod,
       description: product.description,
       unitPrice: product.unitPrice,
       quantity: Number(quantity),
       bonus: Number(bonus),
-      subtotal: (product.unitPrice * quantity) - (product.unitPrice * bonus),
+      subtotal: product.unitPrice * quantity, // Solo se cobra la cantidad, la bonificación es gratis
       descuento: 0, // Inicializar
       iva: 0,       // Inicializar
       total: 0      // Inicializar
@@ -881,7 +884,7 @@ const PedidoForm = ({ onReturnToMenu }) => {
           <h2 className="text-xl font-semibold mb-4 text-gray-700">
             Agregar Productos
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-600 mb-1">
                 Categoría:
@@ -946,47 +949,47 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </div>
             <button
               onClick={handleAddProduct}
-              className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
+              className="w-full sm:col-span-2 lg:col-span-4 bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
             >
               Agregar
             </button>
           </div>
         </div>
 
-        {/* Lista de productos agregados */}
+        {/* Lista de productos agregados - Modificada para ser responsiva */}
         {orderItems.length > 0 && (
-  <div className="bg-gray-50 p-6 rounded-lg mb-8">
-    <h2 className="text-xl font-semibold mb-4 text-gray-700">
+  <div className="bg-gray-50 p-3 sm:p-6 rounded-lg mb-6 max-w-full overflow-hidden">
+    <h2 className="text-base sm:text-xl font-semibold mb-2 sm:mb-4 text-gray-700">
       Productos en el pedido
     </h2>
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white">
+      <table className="w-full bg-white text-xs sm:text-sm">
         <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">Código</th>
-            <th className="py-2 px-4 border-b">Producto</th>
-            <th className="py-2 px-4 border-b">Cantidad</th>
-            <th className="py-2 px-4 border-b">Bonificación</th>
-            <th className="py-2 px-4 border-b">V. Unitario</th>
-            <th className="py-2 px-4 border-b">Subtotal</th>
-            <th className="py-2 px-4 border-b">Acciones</th>
+          <tr className="bg-gray-200">
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-left">Código</th>
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-left">Producto</th>
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">Cant.</th>
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">Bonif.</th>
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">V. Unit.</th>
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">Subtotal</th>
+            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">Acción</th>
           </tr>
         </thead>
         <tbody>
           {orderItems.map((item, index) => (
             <tr key={index} className="hover:bg-gray-50">
-              <td className="py-2 px-4 border-b">{item.cod}</td>
-              <td className="py-2 px-4 border-b">{item.description}</td>
-              <td className="py-2 px-4 border-b text-right">{item.quantity}</td>
-              <td className="py-2 px-4 border-b text-right">{item.bonus}</td>
-              <td className="py-2 px-4 border-b text-right">${item.unitPrice?.toLocaleString("es-CO")}</td>
-              <td className="py-2 px-4 border-b text-right">${item.subtotal?.toLocaleString("es-CO")}</td>
-              <td className="py-2 px-4 border-b text-center">
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b">{item.cod}</td>
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b">{item.description}</td>
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">{item.quantity}</td>
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">{item.bonus}</td>
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">${item.unitPrice?.toLocaleString("es-CO")}</td>
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">${item.subtotal?.toLocaleString("es-CO")}</td>
+              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
                 <button 
                   onClick={() => handleRemoveProduct(index)}
                   className="text-red-500 hover:text-red-700"
                 >
-                  Eliminar
+                  X
                 </button>
               </td>
             </tr>

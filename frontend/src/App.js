@@ -575,6 +575,8 @@ const PedidoForm = ({ onReturnToMenu }) => {
     barrio: "",
     cel: "",
     correo: "",
+    ordenSalida: "facturado",
+    observaciones: "",
   });
 
   const [orderItems, setOrderItems] = useState([]);
@@ -589,7 +591,7 @@ const PedidoForm = ({ onReturnToMenu }) => {
   };
 
   const handleAddProduct = () => {
-    if (!selectedProduct || quantity <= 0) return;
+    if (!selectedProduct || (quantity <= 0 && bonus <= 0)) return;
     
     const product = PRODUCT_DATA.products[selectedCategory]
       .find(p => p.cod === selectedProduct);
@@ -786,8 +788,12 @@ const PedidoForm = ({ onReturnToMenu }) => {
               <div class="info-value">${clientInfo.cel}</div>
             </div>
             <div class="info-row">
-              <div class="info-label">Forma pago:</div>
+              <div class="info-label">Forma De Pago:</div>
               <div class="info-value">${clientInfo.contado === 'X' ? 'CONTADO' : 'CRÉDITO'}</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Orden De Salida:</div>
+              <div class="info-value">${clientInfo.ordenSalida === 'facturado' ? 'FACTURADO' : 'SALIDA DE BODEGA'}</div>
             </div>
           </div>
         </div>
@@ -830,11 +836,11 @@ const PedidoForm = ({ onReturnToMenu }) => {
           <div class="signature">EMPACÓ</div>
           <div class="signature">FIRMA CLIENTE</div>
         </div>
-        <div class="observations-box"></div>
+        
         
         <div class="observations">
           <div>OBSERVACIONES:</div>
-          <div class="observations-box"></div>
+          <div class="observations-box">${clientInfo.observaciones}</div>
         </div>
         
         <div class="delivery-date">
@@ -1043,6 +1049,56 @@ const PedidoForm = ({ onReturnToMenu }) => {
                 onChange={handleClientInfoChange}
                 className="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-600 mb-1">
+                Observaciones:
+              </label>
+              <textarea
+                name="observaciones"
+                value={clientInfo.observaciones}
+                onChange={handleClientInfoChange}
+                className="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                rows="3"
+                placeholder="Ingrese sus observaciones aquí"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-600 mb-1">
+                Orden de Salida:
+              </label>
+              <div className="flex space-x-4">
+                <label className="flex items-center text-gray-700">
+                  <input
+                    type="radio"
+                    name="ordenSalida"
+                    value="facturado"
+                    checked={clientInfo.ordenSalida === "facturado"}
+                    onChange={() =>
+                      setClientInfo({
+                        ...clientInfo,
+                        ordenSalida: "facturado",
+                      })
+                    }
+                    className="mr-1"
+                  /> Facturado
+                </label>
+                <label className="flex items-center text-gray-700">
+                  <input
+                    type="radio"
+                    name="ordenSalida"
+                    value="salidaBodega"
+                    checked={clientInfo.ordenSalida === "salidaBodega"}
+                    onChange={() =>
+                      setClientInfo({
+                        ...clientInfo,
+                        ordenSalida: "salidaBodega",
+                      })
+                    }
+                    className="mr-1"
+                  /> Salida de Bodega
+                </label>
+              </div>
             </div>
           </div>
         </div>

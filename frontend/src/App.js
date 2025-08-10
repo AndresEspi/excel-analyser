@@ -65,13 +65,19 @@ const PRODUCT_DATA = {
       {
         cod: "NC37",
         description: "DOYPACK SHAMPOO KERAMILK X100ML",
-        unitPrice: 6000 },
+        unitPrice: 6000,
+      },
       { cod: "NC03", description: "SHAMPOO KERAMILK X 300", unitPrice: 18750 },
-      { cod: "NC33", description: "DISPLAY SHAMPOO KERAMILK X 14 UND", unitPrice: 33000 },
+      {
+        cod: "NC33",
+        description: "DISPLAY SHAMPOO KERAMILK X 14 UND",
+        unitPrice: 33000,
+      },
       {
         cod: "NC36",
         description: "DOYPACK TRATAMIENTO KERAMILK X100ML",
-        unitPrice: 6600 },
+        unitPrice: 6600,
+      },
       {
         cod: "NC04",
         description: "TRATAMIENTO KERAMILK X 300",
@@ -92,7 +98,11 @@ const PRODUCT_DATA = {
         description: "TERMOPROTECTOR KERAMILK SPRAY 160 ML",
         unitPrice: 14200,
       },
-      { cod: "NC254", description: "TERMOPROTECTOR KERAMILK SPRAY 300 ML", unitPrice: 21700 },
+      {
+        cod: "NC254",
+        description: "TERMOPROTECTOR KERAMILK SPRAY 300 ML",
+        unitPrice: 21700,
+      },
     ],
     "LINEA FASTMEN": [
       { cod: "NC55", description: "DOY PACK FAST MEN X100ML", unitPrice: 5300 },
@@ -304,7 +314,11 @@ const PRODUCT_DATA = {
         description: "REMOVEDOR ECOLOGICO X500ML",
         unitPrice: 16800,
       },
-      { cod: "NC66", description: "REMOVEDOR ECOLOGICO X1000ML", unitPrice: 28000 },
+      {
+        cod: "NC66",
+        description: "REMOVEDOR ECOLOGICO X1000ML",
+        unitPrice: 28000,
+      },
       { cod: "ESM009", description: "UÑAS DE FELINO", unitPrice: 6950 },
     ],
   },
@@ -561,7 +575,7 @@ const ExcelAnalyser = ({ onReturnToMenu }) => {
 // Componente para la funcionalidad de Llenado de Toma de Pedido
 const PedidoForm = ({ onReturnToMenu }) => {
   const [clientInfo, setClientInfo] = useState({
-    fecha: new Date().toISOString().split('T')[0],
+    fecha: new Date().toISOString().split("T")[0],
     nit: "",
     vendedor: "",
     cliente: "",
@@ -592,10 +606,11 @@ const PedidoForm = ({ onReturnToMenu }) => {
 
   const handleAddProduct = () => {
     if (!selectedProduct || (quantity <= 0 && bonus <= 0)) return;
-    
-    const product = PRODUCT_DATA.products[selectedCategory]
-      .find(p => p.cod === selectedProduct);
-      
+
+    const product = PRODUCT_DATA.products[selectedCategory].find(
+      (p) => p.cod === selectedProduct
+    );
+
     if (!product) return;
 
     // Nueva lógica: La bonificación es adicional y no se resta del subtotal
@@ -609,10 +624,10 @@ const PedidoForm = ({ onReturnToMenu }) => {
       bonus: Number(bonus),
       subtotal: product.unitPrice * quantity, // Solo se cobra la cantidad, la bonificación es gratis
       descuento: 0, // Inicializar
-      iva: 0,       // Inicializar
-      total: 0      // Inicializar
+      iva: 0, // Inicializar
+      total: 0, // Inicializar
     };
-    
+
     setOrderItems([...orderItems, newItem]);
     setSelectedProduct("");
     setQuantity(0);
@@ -626,8 +641,12 @@ const PedidoForm = ({ onReturnToMenu }) => {
 
   const handleDownload = () => {
     // Calcular totales antes de usarlos
-    const subtotalGlobal = orderItems.reduce((sum, item) => sum + (item.subtotal || 0), 0);
-    const descuentoGlobal = subtotalGlobal * (parseInt(clientInfo.descuento || 0) / 100);
+    const subtotalGlobal = orderItems.reduce(
+      (sum, item) => sum + (item.subtotal || 0),
+      0
+    );
+    const descuentoGlobal =
+      subtotalGlobal * (parseInt(clientInfo.descuento || 0) / 100);
     const ivaGlobal = subtotalGlobal * 0.19;
     const totalGlobal = subtotalGlobal + ivaGlobal - descuentoGlobal;
 
@@ -766,7 +785,17 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </div>
             <div class="info-row">
               <div class="info-label">Barrio:</div>
-              <div class="info-value">${clientInfo.barrio} - ${clientInfo.ciudad}</div>
+              <div class="info-value">${clientInfo.barrio} - ${
+      clientInfo.ciudad
+    }</div>
+            </div>
+            <div class="info-row">
+              <div class="info-label">Orden De Salida:</div>
+              <div class="info-value">${
+                clientInfo.ordenSalida === "facturado"
+                  ? "FACTURADO"
+                  : "SALIDA DE BODEGA"
+              }</div>
             </div>
           </div>
           
@@ -789,11 +818,9 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </div>
             <div class="info-row">
               <div class="info-label">Forma De Pago:</div>
-              <div class="info-value">${clientInfo.contado === 'X' ? 'CONTADO' : 'CRÉDITO'}</div>
-            </div>
-            <div class="info-row">
-              <div class="info-label">Orden De Salida:</div>
-              <div class="info-value">${clientInfo.ordenSalida === 'facturado' ? 'FACTURADO' : 'SALIDA DE BODEGA'}</div>
+              <div class="info-value">${
+                clientInfo.contado === "X" ? "CONTADO" : "CRÉDITO"
+              }</div>
             </div>
           </div>
         </div>
@@ -809,25 +836,35 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </tr>
           </thead>
           <tbody>
-            ${orderItems.map(item => `
+            ${orderItems
+              .map(
+                (item) => `
               <tr>
                 <td>${item.cod}</td>
                 <td>${item.description}</td>
                 <td class="text-center">${item.quantity}</td>
                 <td class="text-center">${item.bonus}</td>
-                <td class="text-right">$${item.subtotal?.toLocaleString("es-CO")}</td>
+                <td class="text-right">$${item.subtotal?.toLocaleString(
+                  "es-CO"
+                )}</td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join("")}
           </tbody>
         </table>
         
         <div class="totals">
           <div>
             <div>SUBTOTAL: $${subtotalGlobal.toLocaleString("es-CO")}</div>
-            <div>DESCUENTO(${clientInfo.descuento || 0}%): $${descuentoGlobal.toLocaleString("es-CO")}</div>
+            <div>DESCUENTO(${
+              clientInfo.descuento || 0
+            }%): $${descuentoGlobal.toLocaleString("es-CO")}</div>
             <div>IVA(19%): $${ivaGlobal.toLocaleString("es-CO")}</div>
           </div>
-          <div class="total">TOTAL: $${totalGlobal.toLocaleString("es-CO")}</div>
+          <div class="total">TOTAL: $${totalGlobal.toLocaleString(
+            "es-CO"
+          )}</div>
         </div>
         
         <div class="signatures">
@@ -937,47 +974,6 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-600 mb-1">
-                Forma de Pago:
-              </label>
-              <div className="flex space-x-4">
-                <label className="flex items-center text-gray-700">
-                  <input
-                    type="radio"
-                    name="pago"
-                    value="contado"
-                    checked={clientInfo.contado === "X"}
-                    onChange={() =>
-                      setClientInfo({
-                        ...clientInfo,
-                        contado: "X",
-                        credito: "",
-                      })
-                    }
-                    className="mr-1"
-                  />{" "}
-                  Contado
-                </label>
-                <label className="flex items-center text-gray-700">
-                  <input
-                    type="radio"
-                    name="pago"
-                    value="credito"
-                    checked={clientInfo.credito === "X"}
-                    onChange={() =>
-                      setClientInfo({
-                        ...clientInfo,
-                        credito: "X",
-                        contado: "",
-                      })
-                    }
-                    className="mr-1"
-                  />{" "}
-                  Crédito
-                </label>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-600 mb-1">
                 Dirección:
               </label>
               <input
@@ -1065,6 +1061,47 @@ const PedidoForm = ({ onReturnToMenu }) => {
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-600 mb-1">
+                Forma de Pago:
+              </label>
+              <div className="flex space-x-4">
+                <label className="flex items-center text-gray-700">
+                  <input
+                    type="radio"
+                    name="pago"
+                    value="contado"
+                    checked={clientInfo.contado === "X"}
+                    onChange={() =>
+                      setClientInfo({
+                        ...clientInfo,
+                        contado: "X",
+                        credito: "",
+                      })
+                    }
+                    className="mr-1"
+                  />{" "}
+                  Contado
+                </label>
+                <label className="flex items-center text-gray-700">
+                  <input
+                    type="radio"
+                    name="pago"
+                    value="credito"
+                    checked={clientInfo.credito === "X"}
+                    onChange={() =>
+                      setClientInfo({
+                        ...clientInfo,
+                        credito: "X",
+                        contado: "",
+                      })
+                    }
+                    className="mr-1"
+                  />{" "}
+                  Crédito
+                </label>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-600 mb-1">
                 Orden de Salida:
               </label>
               <div className="flex space-x-4">
@@ -1081,7 +1118,8 @@ const PedidoForm = ({ onReturnToMenu }) => {
                       })
                     }
                     className="mr-1"
-                  /> Facturado
+                  />{" "}
+                  Facturado
                 </label>
                 <label className="flex items-center text-gray-700">
                   <input
@@ -1096,7 +1134,8 @@ const PedidoForm = ({ onReturnToMenu }) => {
                       })
                     }
                     className="mr-1"
-                  /> Salida de Bodega
+                  />{" "}
+                  Salida de Bodega
                 </label>
               </div>
             </div>
@@ -1114,10 +1153,10 @@ const PedidoForm = ({ onReturnToMenu }) => {
                 Categoría:
               </label>
               <select
-                value={selectedCategory || ''}
+                value={selectedCategory || ""}
                 onChange={(e) => {
                   setSelectedCategory(e.target.value);
-                  setSelectedProduct('');
+                  setSelectedProduct("");
                 }}
                 className="p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               >
@@ -1140,11 +1179,12 @@ const PedidoForm = ({ onReturnToMenu }) => {
                 disabled={!selectedCategory}
               >
                 <option value="">Selecciona un producto</option>
-                {selectedCategory && PRODUCT_DATA.products[selectedCategory].map((product) => (
-                  <option key={product.cod} value={product.cod}>
-                    {product.cod} - {product.description}
-                  </option>
-                ))}
+                {selectedCategory &&
+                  PRODUCT_DATA.products[selectedCategory].map((product) => (
+                    <option key={product.cod} value={product.cod}>
+                      {product.cod} - {product.description}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="flex flex-col">
@@ -1182,75 +1222,110 @@ const PedidoForm = ({ onReturnToMenu }) => {
 
         {/* Lista de productos agregados - Modificada para ser responsiva */}
         {orderItems.length > 0 && (
-  <div className="bg-gray-50 p-3 sm:p-6 rounded-lg mb-6 max-w-full overflow-hidden">
-    <h2 className="text-base sm:text-xl font-semibold mb-2 sm:mb-4 text-gray-700">
-      Productos en el pedido
-    </h2>
-    <div className="overflow-x-auto">
-      <table className="w-full bg-white text-xs sm:text-sm">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-left">Código</th>
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-left">Producto</th>
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">Cant.</th>
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">Bonif.</th>
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">V. Unit.</th>
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">Subtotal</th>
-            <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orderItems.map((item, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b">{item.cod}</td>
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b">{item.description}</td>
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">{item.quantity}</td>
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">{item.bonus}</td>
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">${item.unitPrice?.toLocaleString("es-CO")}</td>
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">${item.subtotal?.toLocaleString("es-CO")}</td>
-              <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
-                <button 
-                  onClick={() => handleRemoveProduct(index)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  X
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-)}
+          <div className="bg-gray-50 p-3 sm:p-6 rounded-lg mb-6 max-w-full overflow-hidden">
+            <h2 className="text-base sm:text-xl font-semibold mb-2 sm:mb-4 text-gray-700">
+              Productos en el pedido
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white text-xs sm:text-sm">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-left">
+                      Código
+                    </th>
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-left">
+                      Producto
+                    </th>
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
+                      Cant.
+                    </th>
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
+                      Bonif.
+                    </th>
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">
+                      V. Unit.
+                    </th>
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">
+                      Subtotal
+                    </th>
+                    <th className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
+                      Acción
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderItems.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b">
+                        {item.cod}
+                      </td>
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b">
+                        {item.description}
+                      </td>
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
+                        {item.quantity}
+                      </td>
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
+                        {item.bonus}
+                      </td>
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">
+                        ${item.unitPrice?.toLocaleString("es-CO")}
+                      </td>
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-right">
+                        ${item.subtotal?.toLocaleString("es-CO")}
+                      </td>
+                      <td className="py-1 px-1 sm:py-2 sm:px-2 border-b text-center">
+                        <button
+                          onClick={() => handleRemoveProduct(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          X
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {/* Calcular totales globales */}
         {/* Resumen del pedido */}
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          {
-            (() => {
-              const subtotalGlobal = orderItems.reduce((sum, item) => sum + (item.subtotal || 0), 0);
-              const descuentoGlobal = subtotalGlobal * (parseInt(clientInfo.descuento || 0) / 100);
-              const ivaGlobal = subtotalGlobal * 0.19;
-              const totalGlobal = subtotalGlobal + ivaGlobal - descuentoGlobal;
-              
-              return (
-                <>
-                  <h3 className="text-lg font-semibold mb-2">Resumen del Pedido</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p>Subtotal: ${subtotalGlobal.toLocaleString("es-CO")}</p>
-                      <p>Descuento ({clientInfo.descuento || 0}%): ${descuentoGlobal.toLocaleString("es-CO")}</p>
-                    </div>
-                    <div>
-                      <p>IVA (19%): ${ivaGlobal.toLocaleString("es-CO")}</p>
-                      <p className="font-bold">Total: ${totalGlobal.toLocaleString("es-CO")}</p>
-                    </div>
+          {(() => {
+            const subtotalGlobal = orderItems.reduce(
+              (sum, item) => sum + (item.subtotal || 0),
+              0
+            );
+            const descuentoGlobal =
+              subtotalGlobal * (parseInt(clientInfo.descuento || 0) / 100);
+            const ivaGlobal = subtotalGlobal * 0.19;
+            const totalGlobal = subtotalGlobal + ivaGlobal - descuentoGlobal;
+
+            return (
+              <>
+                <h3 className="text-lg font-semibold mb-2">
+                  Resumen del Pedido
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p>Subtotal: ${subtotalGlobal.toLocaleString("es-CO")}</p>
+                    <p>
+                      Descuento ({clientInfo.descuento || 0}%): $
+                      {descuentoGlobal.toLocaleString("es-CO")}
+                    </p>
                   </div>
-                </>
-              );
-            })()
-          }
+                  <div>
+                    <p>IVA (19%): ${ivaGlobal.toLocaleString("es-CO")}</p>
+                    <p className="font-bold">
+                      Total: ${totalGlobal.toLocaleString("es-CO")}
+                    </p>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
         </div>
 
         {/* Botón de descarga y regresar */}
